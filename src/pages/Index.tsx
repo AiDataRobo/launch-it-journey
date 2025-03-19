@@ -6,6 +6,7 @@ import HowItWorks from '@/components/HowItWorks';
 import CareerPaths from '@/components/CareerPaths';
 import Testimonials from '@/components/Testimonials';
 import SkillResources from '@/components/SkillResources';
+import MentorshipScheduler from '@/components/MentorshipScheduler';
 import Community from '@/components/Community';
 import Footer from '@/components/Footer';
 
@@ -24,6 +25,7 @@ const Index = () => {
         <CareerPaths />
         <Testimonials />
         <SkillResources />
+        <MentorshipScheduler />
         <Community />
       </main>
       <Footer />
