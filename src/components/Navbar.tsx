@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ThemeToggle } from './ThemeToggle';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -54,14 +53,12 @@ const Navbar = () => {
 
           {/* Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <ThemeToggle />
             <Button variant="outline" size="sm">Log In</Button>
             <Button size="sm" className="bg-jobonboard-purple hover:bg-jobonboard-purple-light">Sign Up</Button>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden space-x-4">
-            <ThemeToggle />
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-foreground"
