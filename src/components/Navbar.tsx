@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info } from 'lucide-react';
+import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info, Mail, LogIn, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,10 +19,11 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', icon: <Home className="w-4 h-4 mr-2" />, href: '/' },
-    { name: 'Services', icon: <Briefcase className="w-4 h-4 mr-2" />, href: '#how-it-works' },
-    { name: 'Products', icon: <ShoppingCart className="w-4 h-4 mr-2" />, href: '#career-paths' },
-    { name: 'About Us', icon: <Info className="w-4 h-4 mr-2" />, href: '#skills' },
-    { name: 'Community', icon: <Users className="w-4 h-4 mr-2" />, href: '#community' },
+    { name: 'Services', icon: <Briefcase className="w-4 h-4 mr-2" />, href: '/#how-it-works' },
+    { name: 'Products', icon: <ShoppingCart className="w-4 h-4 mr-2" />, href: '/#career-paths' },
+    { name: 'About Us', icon: <Info className="w-4 h-4 mr-2" />, href: '/about-us' },
+    { name: 'Community', icon: <Users className="w-4 h-4 mr-2" />, href: '/community' },
+    { name: 'Contact Us', icon: <Mail className="w-4 h-4 mr-2" />, href: '/contact-us' },
   ];
 
   return (
@@ -33,28 +35,38 @@ const Navbar = () => {
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <span className="text-xl font-bold text-foreground">Job<span className="text-jobonboard-blue">Onboard</span></span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             {navItems.map((item) => (
-              <a 
+              <Link 
                 key={item.name}
-                href={item.href} 
+                to={item.href} 
                 className="flex items-center text-foreground/80 hover:text-foreground transition-colors"
               >
                 {item.icon}
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
           {/* Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline" size="sm">Log In</Button>
-            <Button size="sm" className="bg-jobonboard-purple hover:bg-jobonboard-purple-light">Sign Up</Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/login" className="flex items-center gap-1">
+                <LogIn className="w-4 h-4" />
+                Log In
+              </Link>
+            </Button>
+            <Button size="sm" className="bg-jobonboard-purple hover:bg-jobonboard-purple-light" asChild>
+              <Link to="/signup" className="flex items-center gap-1">
+                <UserPlus className="w-4 h-4" />
+                Sign Up
+              </Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -80,19 +92,29 @@ const Navbar = () => {
           <div className="container px-6 py-4">
             <nav className="flex flex-col space-y-4 py-4">
               {navItems.map((item) => (
-                <a 
+                <Link 
                   key={item.name}
-                  href={item.href} 
+                  to={item.href} 
                   className="flex items-center text-foreground/80 hover:text-foreground p-2 rounded-md"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.icon}
                   {item.name}
-                </a>
+                </Link>
               ))}
               <div className="flex space-x-4 pt-2">
-                <Button variant="outline" size="sm" className="flex-1">Log In</Button>
-                <Button size="sm" className="flex-1 bg-jobonboard-purple hover:bg-jobonboard-purple-light">Sign Up</Button>
+                <Button variant="outline" size="sm" className="flex-1" asChild>
+                  <Link to="/login" className="flex items-center justify-center gap-1">
+                    <LogIn className="w-4 h-4" />
+                    Log In
+                  </Link>
+                </Button>
+                <Button size="sm" className="flex-1 bg-jobonboard-purple hover:bg-jobonboard-purple-light" asChild>
+                  <Link to="/signup" className="flex items-center justify-center gap-1">
+                    <UserPlus className="w-4 h-4" />
+                    Sign Up
+                  </Link>
+                </Button>
               </div>
             </nav>
           </div>
