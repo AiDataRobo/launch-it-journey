@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -17,6 +17,14 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navItems = [
+    { name: 'Home', icon: <Home className="w-4 h-4 mr-2" />, href: '/' },
+    { name: 'Services', icon: <Briefcase className="w-4 h-4 mr-2" />, href: '#how-it-works' },
+    { name: 'Products', icon: <ShoppingCart className="w-4 h-4 mr-2" />, href: '#career-paths' },
+    { name: 'About Us', icon: <Info className="w-4 h-4 mr-2" />, href: '#skills' },
+    { name: 'Community', icon: <Users className="w-4 h-4 mr-2" />, href: '#community' },
+  ];
+
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -31,11 +39,17 @@ const Navbar = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#how-it-works" className="text-foreground/80 hover:text-foreground transition-colors">How It Works</a>
-            <a href="#career-paths" className="text-foreground/80 hover:text-foreground transition-colors">Career Paths</a>
-            <a href="#skills" className="text-foreground/80 hover:text-foreground transition-colors">Skills</a>
-            <a href="#community" className="text-foreground/80 hover:text-foreground transition-colors">Community</a>
+          <nav className="hidden md:flex items-center space-x-6">
+            {navItems.map((item) => (
+              <a 
+                key={item.name}
+                href={item.href} 
+                className="flex items-center text-foreground/80 hover:text-foreground transition-colors"
+              >
+                {item.icon}
+                {item.name}
+              </a>
+            ))}
           </nav>
 
           {/* Actions */}
@@ -68,34 +82,17 @@ const Navbar = () => {
         <div className="md:hidden bg-background/95 backdrop-blur-md border-t">
           <div className="container px-6 py-4">
             <nav className="flex flex-col space-y-4 py-4">
-              <a 
-                href="#how-it-works" 
-                className="text-foreground/80 hover:text-foreground p-2 rounded-md"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                How It Works
-              </a>
-              <a 
-                href="#career-paths" 
-                className="text-foreground/80 hover:text-foreground p-2 rounded-md"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Career Paths
-              </a>
-              <a 
-                href="#skills" 
-                className="text-foreground/80 hover:text-foreground p-2 rounded-md"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Skills
-              </a>
-              <a 
-                href="#community" 
-                className="text-foreground/80 hover:text-foreground p-2 rounded-md"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Community
-              </a>
+              {navItems.map((item) => (
+                <a 
+                  key={item.name}
+                  href={item.href} 
+                  className="flex items-center text-foreground/80 hover:text-foreground p-2 rounded-md"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.icon}
+                  {item.name}
+                </a>
+              ))}
               <div className="flex space-x-4 pt-2">
                 <Button variant="outline" size="sm" className="flex-1">Log In</Button>
                 <Button size="sm" className="flex-1 bg-jobonboard-purple hover:bg-jobonboard-purple-light">Sign Up</Button>
