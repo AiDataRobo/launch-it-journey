@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SearchIcon, FileText, Briefcase, GraduationCap, ArrowRight } from 'lucide-react';
+import { SearchIcon, FileText, Briefcase, GraduationCap, ArrowRight, Sparkles } from 'lucide-react';
 
 const HowItWorks = () => {
   const steps = [
@@ -47,12 +47,15 @@ const HowItWorks = () => {
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white to-gray-50/80"></div>
+        <div className="absolute top-1/4 right-0 w-72 h-72 bg-jobonboard-purple/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-72 h-72 bg-jobonboard-blue/5 rounded-full blur-3xl"></div>
       </div>
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-16 animate-slide-up">
-          <div className="inline-block px-4 py-1 rounded-full bg-jobonboard-blue/10 text-jobonboard-blue text-sm font-medium mb-4">
-            Simple Process
+          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-jobonboard-blue/10 text-jobonboard-blue text-sm font-medium mb-4">
+            <Sparkles className="w-4 h-4" />
+            <span>Simple Process</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
           <p className="text-lg text-gray-600">
@@ -64,7 +67,7 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <div 
               key={step.id}
-              className="relative animate-fade-in"
+              className="relative group"
               style={{ animationDelay: `${index * 150}ms` }}
             >
               {/* Connector Line (for desktop) */}
@@ -74,8 +77,8 @@ const HowItWorks = () => {
                 </div>
               )}
               
-              <div className={`p-6 rounded-xl border ${step.borderColor} bg-white shadow-sm hover:shadow-md transition-all-medium h-full`}>
-                <div className={`w-16 h-16 ${step.bgColor} rounded-2xl flex items-center justify-center mb-6`}>
+              <div className={`p-6 rounded-xl border ${step.borderColor} bg-white shadow-sm hover:shadow-lg transition-all-medium h-full group-hover:-translate-y-1`}>
+                <div className={`w-16 h-16 ${step.bgColor} rounded-2xl flex items-center justify-center mb-6 transform transition-transform group-hover:scale-110`}>
                   <step.icon className={`${step.color}`} size={24} />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{step.title}</h3>

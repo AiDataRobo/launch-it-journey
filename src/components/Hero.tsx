@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Rocket, CheckCircle, Star } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -8,36 +8,55 @@ const Hero = () => {
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white to-blue-50/80"></div>
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-jobonboard-green/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 -left-24 w-80 h-80 bg-jobonboard-blue/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-8 right-1/4 w-64 h-64 bg-jobonboard-purple/10 rounded-full blur-3xl"></div>
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-jobonboard-green/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute top-1/2 -left-24 w-80 h-80 bg-jobonboard-blue/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute -bottom-8 right-1/4 w-64 h-64 bg-jobonboard-purple/10 rounded-full blur-3xl animate-pulse-slow"></div>
       </div>
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-6">
           <div className="w-full md:w-1/2 animate-slide-up">
-            <div className="inline-block px-4 py-1 rounded-full bg-jobonboard-purple/10 text-jobonboard-purple text-sm font-medium mb-6">
-              Your Path to IT Career Success
+            {/* Features Banner */}
+            <div className="flex items-center gap-2 px-4 py-2 bg-jobonboard-purple/10 rounded-full w-fit mb-6">
+              <Star className="w-4 h-4 text-jobonboard-purple" />
+              <span className="text-sm font-medium text-jobonboard-purple">Trusted by 1000+ IT Professionals</span>
             </div>
+
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
               Launch Your IT Career with <span className="text-gradient-primary">Job Onboard</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-lg">
               Get personalized career guidance, skill-building resources, and job opportunities tailored to your experience level.
             </p>
+
+            {/* Feature List */}
+            <div className="space-y-4 mb-8">
+              {[
+                'Personalized career roadmap',
+                'Industry-recognized certifications',
+                'Direct connections with top employers'
+              ].map((feature, index) => (
+                <div key={index} className="flex items-center gap-3 text-gray-700">
+                  <CheckCircle className="w-5 h-5 text-jobonboard-green" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+
             <div className="flex flex-wrap gap-4">
               <a 
                 href="#" 
-                className="px-6 py-3 rounded-full bg-jobonboard-purple text-white font-medium hover:bg-jobonboard-purple-light hover-scale shadow-md focus-ring"
+                className="group px-6 py-3 rounded-full bg-jobonboard-purple text-white font-medium hover:bg-jobonboard-purple-light hover-scale shadow-md focus-ring inline-flex items-center gap-2"
               >
                 Get Started
+                <Rocket className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </a>
               <a 
                 href="#career-paths" 
-                className="px-6 py-3 rounded-full border border-gray-300 text-gray-700 font-medium hover:border-jobonboard-purple hover:text-jobonboard-purple hover-scale focus-ring group flex items-center"
+                className="px-6 py-3 rounded-full border border-gray-300 text-gray-700 font-medium hover:border-jobonboard-purple hover:text-jobonboard-purple hover-scale focus-ring inline-flex items-center gap-2 group"
               >
                 Explore Careers
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </a>
             </div>
           </div>
@@ -58,24 +77,14 @@ const Hero = () => {
                     <div className="h-5 w-40 bg-gray-200 rounded animate-pulse-slow"></div>
                   </div>
                   <div className="space-y-3">
-                    <div className="flex gap-4 items-center">
-                      <div className="w-10 h-10 rounded-full bg-jobonboard-purple/20 flex items-center justify-center">
-                        <span className="text-jobonboard-purple font-medium">1</span>
+                    {[1, 2, 3].map((item) => (
+                      <div key={item} className="flex gap-4 items-center">
+                        <div className={`w-10 h-10 rounded-full bg-jobonboard-${item === 1 ? 'purple' : item === 2 ? 'blue' : 'green'}/20 flex items-center justify-center`}>
+                          <span className={`text-jobonboard-${item === 1 ? 'purple' : item === 2 ? 'blue' : 'green'} font-medium`}>{item}</span>
+                        </div>
+                        <div className="h-4 flex-1 bg-gray-200 rounded animate-pulse-slow"></div>
                       </div>
-                      <div className="h-4 w-64 bg-gray-200 rounded animate-pulse-slow"></div>
-                    </div>
-                    <div className="flex gap-4 items-center">
-                      <div className="w-10 h-10 rounded-full bg-jobonboard-blue/20 flex items-center justify-center">
-                        <span className="text-jobonboard-blue font-medium">2</span>
-                      </div>
-                      <div className="h-4 w-56 bg-gray-200 rounded animate-pulse-slow"></div>
-                    </div>
-                    <div className="flex gap-4 items-center">
-                      <div className="w-10 h-10 rounded-full bg-jobonboard-green/20 flex items-center justify-center">
-                        <span className="text-jobonboard-green font-medium">3</span>
-                      </div>
-                      <div className="h-4 w-60 bg-gray-200 rounded animate-pulse-slow"></div>
-                    </div>
+                    ))}
                   </div>
                   <div className="mt-6">
                     <div className="h-10 w-full bg-jobonboard-purple/20 rounded-md"></div>
