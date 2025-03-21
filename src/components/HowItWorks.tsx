@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { SearchIcon, FileText, Briefcase, GraduationCap, ArrowRight, Sparkles, ChevronRight, Award, TrendingUp, Map, Target, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { SearchIcon, FileText, Briefcase, GraduationCap, ArrowRight, Sparkles, ChevronRight, Award, TrendingUp, Map, Target, CheckCircle2, ShieldCheck, UserCheck } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { 
   Carousel,
@@ -12,6 +12,7 @@ import {
 
 const HowItWorks = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
   
   const steps = [
     {
@@ -67,8 +68,27 @@ const HowItWorks = () => {
     { title: 'Leadership Role', icon: Map, color: 'text-amber-500' }
   ];
 
+  // Auto-advance steps to showcase the journey
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!isAnimating) {
+        setActiveStep((prev) => (prev === steps.length - 1 ? 0 : prev + 1));
+      }
+    }, 8000);
+    
+    return () => clearInterval(timer);
+  }, [isAnimating, steps.length]);
+
   const handleStepClick = (index: number) => {
+    if (index === activeStep) return;
+    
+    setIsAnimating(true);
     setActiveStep(index);
+    
+    // Reset animation state after animation completes
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 600);
   };
 
   return (
@@ -92,29 +112,34 @@ const HowItWorks = () => {
           </p>
         </div>
         
-        {/* Career Path Visualization */}
+        {/* Career Path Visualization - Enhanced with better contrast and interactivity */}
         <div className="mb-16">
-          <div className="relative mb-6">
-            <div className="h-2 bg-gray-200 rounded-full">
+          <div className="relative mb-8">
+            <div className="h-3 bg-gray-200 rounded-full shadow-inner">
               <div 
-                className="h-2 bg-gradient-to-r from-jobonboard-blue via-jobonboard-purple to-jobonboard-green rounded-full transition-all duration-500"
+                className="h-3 bg-gradient-to-r from-jobonboard-blue via-jobonboard-purple to-jobonboard-green rounded-full transition-all duration-700 shadow"
                 style={{ width: `${(activeStep + 1) * 25}%` }}
               ></div>
             </div>
-            <div className="flex justify-between mt-2">
+            <div className="flex justify-between mt-3">
               {steps.map((step, index) => (
                 <div key={step.id} className="flex flex-col items-center">
                   <button 
                     onClick={() => handleStepClick(index)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all -mt-5 ${
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 -mt-5 transform ${
                       index <= activeStep 
-                        ? `${step.bgColor} ${step.color}`
-                        : 'bg-gray-200 text-gray-400'
+                        ? `${step.bgColor} ${step.color} scale-110 shadow-md`
+                        : 'bg-gray-200 text-gray-400 hover:bg-gray-300'
                     }`}
+                    aria-label={`Go to step ${index + 1}: ${step.title}`}
                   >
-                    {index < activeStep ? <CheckCircle2 size={16} /> : index + 1}
+                    {index < activeStep ? (
+                      <CheckCircle2 size={18} className="text-white" />
+                    ) : (
+                      <span className="font-medium">{index + 1}</span>
+                    )}
                   </button>
-                  <span className={`text-xs font-medium mt-2 hidden md:block ${
+                  <span className={`text-sm font-medium mt-3 transition-colors duration-300 hidden md:block ${
                     index <= activeStep ? step.color : 'text-gray-400'
                   }`}>
                     {step.title}
@@ -125,10 +150,12 @@ const HowItWorks = () => {
           </div>
         </div>
         
-        {/* Step Details */}
+        {/* Step Details - Enhanced with animations and better visual hierarchy */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          <div className={`p-8 rounded-xl ${steps[activeStep].bgColor} border ${steps[activeStep].borderColor} animate-fade-in`}>
-            <div className={`w-16 h-16 ${steps[activeStep].bgColor} rounded-2xl flex items-center justify-center mb-6`}>
+          <div 
+            className={`p-8 rounded-xl ${steps[activeStep].bgColor} border ${steps[activeStep].borderColor} transition-all duration-500 transform ${isAnimating ? 'scale-95 opacity-0' : 'scale-100 opacity-100'} hover:shadow-lg`}
+          >
+            <div className={`w-16 h-16 ${steps[activeStep].bgColor} rounded-2xl flex items-center justify-center mb-6 shadow-inner`}>
               {React.createElement(steps[activeStep].icon, { className: steps[activeStep].color, size: 32 })}
             </div>
             <h3 className="text-2xl font-bold mb-3">{steps[activeStep].title}</h3>
@@ -143,15 +170,21 @@ const HowItWorks = () => {
             </ul>
           </div>
           <div className="flex flex-col justify-center">
-            <h3 className="text-xl font-semibold mb-4">Career Progression</h3>
+            <div className="flex items-center mb-4">
+              <h3 className="text-xl font-semibold">Career Progression</h3>
+              <div className="ml-3 px-3 py-1 bg-jobonboard-green/10 rounded-full text-xs font-medium text-jobonboard-green flex items-center">
+                <ShieldCheck className="mr-1" size={14} />
+                Proven Path
+              </div>
+            </div>
             <p className="text-gray-600 mb-6">
               As you progress through each step, you'll build the foundation for advancement in your IT career:
             </p>
             <div className="space-y-6">
               {milestones.map((milestone, index) => (
                 <div key={index} className="flex items-center">
-                  <div className={`w-10 h-10 rounded-lg ${index <= activeStep ? 'bg-gray-100' : 'bg-gray-50'} flex items-center justify-center mr-4`}>
-                    <milestone.icon className={index <= activeStep ? milestone.color : 'text-gray-300'} size={20} />
+                  <div className={`w-12 h-12 rounded-lg ${index <= activeStep ? 'bg-gray-100' : 'bg-gray-50'} flex items-center justify-center mr-4 transition-all duration-300 ${index <= activeStep ? 'shadow' : ''}`}>
+                    <milestone.icon className={index <= activeStep ? milestone.color : 'text-gray-300'} size={22} />
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between mb-1">
@@ -160,7 +193,10 @@ const HowItWorks = () => {
                         {index <= activeStep ? 'Achievable' : 'Future goal'}
                       </span>
                     </div>
-                    <Progress value={index <= activeStep ? 100 : (activeStep / 3) * 25} className="h-2" />
+                    <Progress 
+                      value={index <= activeStep ? 100 : (activeStep / 3) * 25} 
+                      className={`h-2 transition-all duration-500 ${index <= activeStep ? 'opacity-100' : 'opacity-60'}`} 
+                    />
                   </div>
                 </div>
               ))}
@@ -168,14 +204,20 @@ const HowItWorks = () => {
           </div>
         </div>
         
-        {/* Success Stories Carousel */}
+        {/* Success Stories Carousel - Enhanced with trust indicators */}
         <div className="mt-16">
-          <h3 className="text-xl font-semibold mb-6 text-center">Success Stories from Each Stage</h3>
+          <div className="flex items-center justify-center mb-6">
+            <h3 className="text-xl font-semibold text-center">Success Stories from Each Stage</h3>
+            <div className="ml-3 px-3 py-1 bg-jobonboard-purple/10 rounded-full text-xs font-medium text-jobonboard-purple flex items-center">
+              <UserCheck className="mr-1" size={14} />
+              Verified Results
+            </div>
+          </div>
           <Carousel className="w-full max-w-4xl mx-auto">
             <CarouselContent>
               {steps.map((step, index) => (
                 <CarouselItem key={index}>
-                  <div className="p-6 rounded-xl border bg-white shadow-sm">
+                  <div className="p-6 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all duration-300">
                     <div className="flex items-center mb-4">
                       <div className={`w-12 h-12 ${step.bgColor} rounded-full flex items-center justify-center mr-4`}>
                         <step.icon className={step.color} size={24} />
@@ -198,14 +240,14 @@ const HowItWorks = () => {
           </Carousel>
         </div>
         
-        {/* Call to Action */}
+        {/* Call to Action - Enhanced with better visibility */}
         <div className="mt-16 text-center">
           <a 
             href="/signup" 
-            className="inline-flex items-center px-6 py-3 rounded-lg bg-jobonboard-purple text-white hover:bg-jobonboard-purple-light transition-all font-medium"
+            className="inline-flex items-center px-8 py-4 rounded-lg bg-jobonboard-purple text-white hover:bg-jobonboard-purple-light transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:scale-105"
           >
             Start Your Career Journey
-            <ArrowRight className="ml-2 w-4 h-4" />
+            <ArrowRight className="ml-2 w-5 h-5" />
           </a>
         </div>
       </div>
