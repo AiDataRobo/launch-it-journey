@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 import StepProgress from './how-it-works/StepProgress';
 import StepDetails from './how-it-works/StepDetails';
 import CareerMilestones from './how-it-works/CareerMilestones';
@@ -18,7 +19,7 @@ const HowItWorks = () => {
       if (!isAnimating) {
         setActiveStep((prev) => (prev === steps.length - 1 ? 0 : prev + 1));
       }
-    }, 8000);
+    }, 10000); // Increased time to 10 seconds to give users more time to read
     
     return () => clearInterval(timer);
   }, [isAnimating]);
@@ -40,12 +41,39 @@ const HowItWorks = () => {
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white to-gray-50/80"></div>
-        <div className="absolute top-1/4 right-0 w-72 h-72 bg-jobonboard-purple/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-0 w-72 h-72 bg-jobonboard-blue/5 rounded-full blur-3xl"></div>
+        <motion.div 
+          className="absolute top-1/4 right-0 w-72 h-72 bg-jobonboard-purple/5 rounded-full blur-3xl"
+          animate={{ 
+            x: [0, 10, 0],
+            y: [0, 15, 0],
+          }}
+          transition={{ 
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        ></motion.div>
+        <motion.div 
+          className="absolute bottom-1/4 left-0 w-72 h-72 bg-jobonboard-blue/5 rounded-full blur-3xl"
+          animate={{ 
+            x: [0, -10, 0],
+            y: [0, -15, 0],
+          }}
+          transition={{ 
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        ></motion.div>
       </div>
       
       <div className="container mx-auto px-6 md:px-12 relative z-10">
-        <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
+        <motion.div 
+          className="max-w-3xl mx-auto text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+        >
           <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-jobonboard-blue/10 text-jobonboard-blue text-sm font-medium mb-4">
             <Sparkles className="w-4 h-4" />
             <span>Your Career Journey</span>
@@ -54,16 +82,21 @@ const HowItWorks = () => {
           <p className="text-lg text-gray-600">
             Follow our proven process to navigate your IT career path, from assessment to continuous growth.
           </p>
-        </div>
+        </motion.div>
         
         {/* Career Path Visualization - Enhanced with better contrast and interactivity */}
-        <div className="mb-16">
+        <motion.div 
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
           <StepProgress 
             steps={steps} 
             activeStep={activeStep} 
             onStepClick={handleStepClick} 
           />
-        </div>
+        </motion.div>
         
         {/* Step Details and Career Milestones */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
