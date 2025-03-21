@@ -1,73 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
-import { SearchIcon, FileText, Briefcase, GraduationCap, ArrowRight, Sparkles, ChevronRight, Award, TrendingUp, Map, Target, CheckCircle2, ShieldCheck, UserCheck } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
-} from '@/components/ui/carousel';
+import { Sparkles } from 'lucide-react';
+import StepProgress from './how-it-works/StepProgress';
+import StepDetails from './how-it-works/StepDetails';
+import CareerMilestones from './how-it-works/CareerMilestones';
+import SuccessStories from './how-it-works/SuccessStories';
+import CallToAction from './how-it-works/CallToAction';
+import { steps, milestones } from './how-it-works/data';
 
 const HowItWorks = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   
-  const steps = [
-    {
-      id: 1,
-      title: 'Assess Your Skills',
-      description: 'Take our comprehensive assessment to identify your strengths, skills, and areas for growth.',
-      icon: SearchIcon,
-      color: 'text-jobonboard-blue',
-      bgColor: 'bg-jobonboard-blue/10',
-      borderColor: 'border-jobonboard-blue/20',
-      detailedDescription: 'Our AI-powered assessment analyzes your current technical skills, soft skills, and experience to create a personalized career roadmap.',
-      insights: ['Technical skill evaluation', 'Soft skills assessment', 'Experience mapping', 'Strengths identification'],
-    },
-    {
-      id: 2,
-      title: 'Build Your Resume',
-      description: 'Create a tailored resume highlighting your relevant skills and experience for IT roles.',
-      icon: FileText,
-      color: 'text-jobonboard-purple',
-      bgColor: 'bg-jobonboard-purple/10',
-      borderColor: 'border-jobonboard-purple/20',
-      detailedDescription: 'Craft a standout resume with our AI-assisted templates that emphasize the skills employers are looking for in the IT industry.',
-      insights: ['Role-specific templates', 'Keyword optimization', 'ATS-friendly formatting', 'Professional review'],
-    },
-    {
-      id: 3,
-      title: 'Apply for Jobs',
-      description: 'Access our curated job listings and receive personalized recommendations.',
-      icon: Briefcase,
-      color: 'text-jobonboard-green',
-      bgColor: 'bg-jobonboard-green/10',
-      borderColor: 'border-jobonboard-green/20',
-      detailedDescription: 'Our platform matches you with relevant job opportunities based on your skills, experience, and career goals.',
-      insights: ['Personalized job matches', 'Application tracking', 'Interview preparation', 'Salary insights'],
-    },
-    {
-      id: 4,
-      title: 'Upskill and Grow',
-      description: 'Continue learning with courses and resources tailored to your career path.',
-      icon: GraduationCap,
-      color: 'text-orange-500',
-      bgColor: 'bg-orange-50',
-      borderColor: 'border-orange-100',
-      detailedDescription: 'Access industry-relevant courses, certifications, and resources to continuously improve your skills and advance in your career.',
-      insights: ['Personalized learning paths', 'Industry certifications', 'Hands-on projects', 'Mentor guidance'],
-    },
-  ];
-
-  const milestones = [
-    { title: 'Entry Level Position', icon: Target, color: 'text-blue-500' },
-    { title: 'Mid-Level Role', icon: TrendingUp, color: 'text-purple-500' },
-    { title: 'Senior Position', icon: Award, color: 'text-green-500' },
-    { title: 'Leadership Role', icon: Map, color: 'text-amber-500' }
-  ];
-
   // Auto-advance steps to showcase the journey
   useEffect(() => {
     const timer = setInterval(() => {
@@ -77,7 +21,7 @@ const HowItWorks = () => {
     }, 8000);
     
     return () => clearInterval(timer);
-  }, [isAnimating, steps.length]);
+  }, [isAnimating]);
 
   const handleStepClick = (index: number) => {
     if (index === activeStep) return;
@@ -114,142 +58,30 @@ const HowItWorks = () => {
         
         {/* Career Path Visualization - Enhanced with better contrast and interactivity */}
         <div className="mb-16">
-          <div className="relative mb-8">
-            <div className="h-3 bg-gray-200 rounded-full shadow-inner">
-              <div 
-                className="h-3 bg-gradient-to-r from-jobonboard-blue via-jobonboard-purple to-jobonboard-green rounded-full transition-all duration-700 shadow"
-                style={{ width: `${(activeStep + 1) * 25}%` }}
-              ></div>
-            </div>
-            <div className="flex justify-between mt-3">
-              {steps.map((step, index) => (
-                <div key={step.id} className="flex flex-col items-center">
-                  <button 
-                    onClick={() => handleStepClick(index)}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 -mt-5 transform ${
-                      index <= activeStep 
-                        ? `${step.bgColor} ${step.color} scale-110 shadow-md`
-                        : 'bg-gray-200 text-gray-400 hover:bg-gray-300'
-                    }`}
-                    aria-label={`Go to step ${index + 1}: ${step.title}`}
-                  >
-                    {index < activeStep ? (
-                      <CheckCircle2 size={18} className="text-white" />
-                    ) : (
-                      <span className="font-medium">{index + 1}</span>
-                    )}
-                  </button>
-                  <span className={`text-sm font-medium mt-3 transition-colors duration-300 hidden md:block ${
-                    index <= activeStep ? step.color : 'text-gray-400'
-                  }`}>
-                    {step.title}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <StepProgress 
+            steps={steps} 
+            activeStep={activeStep} 
+            onStepClick={handleStepClick} 
+          />
         </div>
         
-        {/* Step Details - Enhanced with animations and better visual hierarchy */}
+        {/* Step Details and Career Milestones */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          <div 
-            className={`p-8 rounded-xl ${steps[activeStep].bgColor} border ${steps[activeStep].borderColor} transition-all duration-500 transform ${isAnimating ? 'scale-95 opacity-0' : 'scale-100 opacity-100'} hover:shadow-lg`}
-          >
-            <div className={`w-16 h-16 ${steps[activeStep].bgColor} rounded-2xl flex items-center justify-center mb-6 shadow-inner`}>
-              {React.createElement(steps[activeStep].icon, { className: steps[activeStep].color, size: 32 })}
-            </div>
-            <h3 className="text-2xl font-bold mb-3">{steps[activeStep].title}</h3>
-            <p className="text-gray-700 mb-6">{steps[activeStep].detailedDescription}</p>
-            <ul className="space-y-3">
-              {steps[activeStep].insights.map((insight, index) => (
-                <li key={index} className="flex items-start">
-                  <ChevronRight className={`${steps[activeStep].color} mt-1 mr-2`} size={16} />
-                  <span>{insight}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex flex-col justify-center">
-            <div className="flex items-center mb-4">
-              <h3 className="text-xl font-semibold">Career Progression</h3>
-              <div className="ml-3 px-3 py-1 bg-jobonboard-green/10 rounded-full text-xs font-medium text-jobonboard-green flex items-center">
-                <ShieldCheck className="mr-1" size={14} />
-                Proven Path
-              </div>
-            </div>
-            <p className="text-gray-600 mb-6">
-              As you progress through each step, you'll build the foundation for advancement in your IT career:
-            </p>
-            <div className="space-y-6">
-              {milestones.map((milestone, index) => (
-                <div key={index} className="flex items-center">
-                  <div className={`w-12 h-12 rounded-lg ${index <= activeStep ? 'bg-gray-100' : 'bg-gray-50'} flex items-center justify-center mr-4 transition-all duration-300 ${index <= activeStep ? 'shadow' : ''}`}>
-                    <milestone.icon className={index <= activeStep ? milestone.color : 'text-gray-300'} size={22} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between mb-1">
-                      <span className={`font-medium ${index <= activeStep ? 'text-gray-800' : 'text-gray-400'}`}>{milestone.title}</span>
-                      <span className={`text-xs ${index <= activeStep ? milestone.color : 'text-gray-300'}`}>
-                        {index <= activeStep ? 'Achievable' : 'Future goal'}
-                      </span>
-                    </div>
-                    <Progress 
-                      value={index <= activeStep ? 100 : (activeStep / 3) * 25} 
-                      className={`h-2 transition-all duration-500 ${index <= activeStep ? 'opacity-100' : 'opacity-60'}`} 
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <StepDetails 
+            step={steps[activeStep]} 
+            isAnimating={isAnimating} 
+          />
+          <CareerMilestones 
+            milestones={milestones} 
+            activeStep={activeStep} 
+          />
         </div>
         
-        {/* Success Stories Carousel - Enhanced with trust indicators */}
-        <div className="mt-16">
-          <div className="flex items-center justify-center mb-6">
-            <h3 className="text-xl font-semibold text-center">Success Stories from Each Stage</h3>
-            <div className="ml-3 px-3 py-1 bg-jobonboard-purple/10 rounded-full text-xs font-medium text-jobonboard-purple flex items-center">
-              <UserCheck className="mr-1" size={14} />
-              Verified Results
-            </div>
-          </div>
-          <Carousel className="w-full max-w-4xl mx-auto">
-            <CarouselContent>
-              {steps.map((step, index) => (
-                <CarouselItem key={index}>
-                  <div className="p-6 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all duration-300">
-                    <div className="flex items-center mb-4">
-                      <div className={`w-12 h-12 ${step.bgColor} rounded-full flex items-center justify-center mr-4`}>
-                        <step.icon className={step.color} size={24} />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold">{step.title} Success</h4>
-                        <p className="text-sm text-gray-500">Real user journey</p>
-                      </div>
-                    </div>
-                    <blockquote className="italic text-gray-600 mb-4">
-                      "After completing the {step.title.toLowerCase()} stage, I gained the confidence and skills to advance in my career. This platform made it seamless to transition to the next phase."
-                    </blockquote>
-                    <div className="text-sm text-right text-gray-500">- IT Professional</div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-0" />
-            <CarouselNext className="right-0" />
-          </Carousel>
-        </div>
+        {/* Success Stories Carousel */}
+        <SuccessStories steps={steps} />
         
-        {/* Call to Action - Enhanced with better visibility */}
-        <div className="mt-16 text-center">
-          <a 
-            href="/signup" 
-            className="inline-flex items-center px-8 py-4 rounded-lg bg-jobonboard-purple text-white hover:bg-jobonboard-purple-light transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:scale-105"
-          >
-            Start Your Career Journey
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </a>
-        </div>
+        {/* Call to Action */}
+        <CallToAction />
       </div>
     </section>
   );
