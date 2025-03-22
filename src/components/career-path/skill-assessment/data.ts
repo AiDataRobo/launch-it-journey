@@ -29,7 +29,7 @@ export const skillCategories = [
   },
 ];
 
-// Updated to use the union type values from Certification type
+// Using the exact string literals from the Certification type
 export const certifications = [
   { name: 'AWS Cloud Practitioner', status: 'completed', date: 'Jun 2023' },
   { name: 'JavaScript Algorithms & Data Structures', status: 'completed', date: 'Mar 2023' },
