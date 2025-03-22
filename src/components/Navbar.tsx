@@ -1,12 +1,13 @@
-
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info, Mail, LogIn, UserPlus } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info, Mail, LogIn, UserPlus, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll event to change navbar appearance
   useEffect(() => {
@@ -17,9 +18,21 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsServicesDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const navItems = [
     { name: 'Home', icon: <Home className="w-4 h-4 mr-2" />, href: '/' },
-    { name: 'Services', icon: <Briefcase className="w-4 h-4 mr-2" />, href: '/#how-it-works' },
     { name: 'Products', icon: <ShoppingCart className="w-4 h-4 mr-2" />, href: '/#career-paths' },
     { name: 'About Us', icon: <Info className="w-4 h-4 mr-2" />, href: '/about-us' },
     { name: 'Community', icon: <Users className="w-4 h-4 mr-2" />, href: '/community' },
@@ -41,7 +54,82 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => (
+            {/* Home Link */}
+            <Link 
+              to="/" 
+              className="flex items-center text-foreground/80 hover:text-foreground transition-colors"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Home
+            </Link>
+
+            {/* Services Dropdown */}
+            <div ref={dropdownRef} className="relative">
+              <button 
+                onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                className="flex items-center text-foreground/80 hover:text-foreground transition-colors"
+              >
+                <Briefcase className="w-4 h-4 mr-2" />
+                Services
+                {isServicesDropdownOpen ? (
+                  <ChevronUp className="w-4 h-4 ml-1" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 ml-1" />
+                )}
+              </button>
+
+              {/* Services Dropdown Menu */}
+              {isServicesDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-background rounded-md shadow-lg border border-border z-50">
+                  <div className="py-2">
+                    <Link 
+                      to="/services"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsServicesDropdownOpen(false)}
+                    >
+                      All Services
+                    </Link>
+                    
+                    <div className="px-4 py-2 text-xs font-semibold text-muted-foreground">Categories</div>
+                    
+                    <Link 
+                      to="/services#prepare-yourself"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsServicesDropdownOpen(false)}
+                    >
+                      Prepare Yourself
+                    </Link>
+                    
+                    <Link 
+                      to="/services#find-a-job"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsServicesDropdownOpen(false)}
+                    >
+                      Find a Job
+                    </Link>
+                    
+                    <Link 
+                      to="/services#grow-your-career"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsServicesDropdownOpen(false)}
+                    >
+                      Grow Your Career
+                    </Link>
+                    
+                    <Link 
+                      to="/services#premium-services"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsServicesDropdownOpen(false)}
+                    >
+                      Premium Services
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Other Nav Items */}
+            {navItems.slice(1).map((item) => (
               <Link 
                 key={item.name}
                 to={item.href} 
@@ -91,7 +179,27 @@ const Navbar = () => {
         <div className="md:hidden bg-background/95 backdrop-blur-md border-t">
           <div className="container px-6 py-4">
             <nav className="flex flex-col space-y-4 py-4">
-              {navItems.map((item) => (
+              <Link 
+                to="/"
+                className="flex items-center text-foreground/80 hover:text-foreground p-2 rounded-md"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Home
+              </Link>
+              
+              {/* Services in mobile view */}
+              <Link 
+                to="/services"
+                className="flex items-center text-foreground/80 hover:text-foreground p-2 rounded-md"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Briefcase className="w-4 h-4 mr-2" />
+                Services
+              </Link>
+              
+              {/* Other nav items */}
+              {navItems.slice(1).map((item) => (
                 <Link 
                   key={item.name}
                   to={item.href} 
@@ -102,6 +210,7 @@ const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
+              
               <div className="flex space-x-4 pt-2">
                 <Button variant="outline" size="sm" className="flex-1" asChild>
                   <Link to="/login" className="flex items-center justify-center gap-1">
