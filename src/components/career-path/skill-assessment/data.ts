@@ -31,10 +31,10 @@ export const skillCategories = [
 
 // Using the exact string literals from the Certification type
 export const certifications = [
-  { name: 'AWS Cloud Practitioner', status: 'completed', date: 'Jun 2023' },
-  { name: 'JavaScript Algorithms & Data Structures', status: 'completed', date: 'Mar 2023' },
-  { name: 'React Developer', status: 'in-progress', progress: 65 },
-  { name: 'Full Stack Web Development', status: 'recommended' },
+  { name: 'AWS Cloud Practitioner', status: 'completed' as const, date: 'Jun 2023' },
+  { name: 'JavaScript Algorithms & Data Structures', status: 'completed' as const, date: 'Mar 2023' },
+  { name: 'React Developer', status: 'in-progress' as const, progress: 65 },
+  { name: 'Full Stack Web Development', status: 'recommended' as const },
 ];
 
 export const nextStepsRecommendations = [
