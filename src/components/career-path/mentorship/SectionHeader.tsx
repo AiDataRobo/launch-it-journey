@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { IconProps } from 'lucide-react';
+import { LucideProps } from 'lucide-react';
 
 interface SectionHeaderProps {
-  icon: React.ComponentType<IconProps>;
+  icon: React.ComponentType<LucideProps>;
   tagText: string;
   title: string;
   description: string;
