@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info, Mail, LogIn, UserPlus, ChevronDown, ChevronUp } from 'lucide-react';
+import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info, Mail, LogIn, UserPlus, ChevronDown, ChevronUp, FileSparkle, Search, BookOpen, Diamond } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
@@ -7,7 +7,9 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const servicesDropdownRef = useRef<HTMLDivElement>(null);
+  const productsDropdownRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll event to change navbar appearance
   useEffect(() => {
@@ -18,11 +20,14 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (servicesDropdownRef.current && !servicesDropdownRef.current.contains(event.target as Node)) {
         setIsServicesDropdownOpen(false);
+      }
+      if (productsDropdownRef.current && !productsDropdownRef.current.contains(event.target as Node)) {
+        setIsProductsDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -33,7 +38,6 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', icon: <Home className="w-4 h-4 mr-2" />, href: '/' },
-    { name: 'Products', icon: <ShoppingCart className="w-4 h-4 mr-2" />, href: '/#career-paths' },
     { name: 'About Us', icon: <Info className="w-4 h-4 mr-2" />, href: '/about-us' },
     { name: 'Community', icon: <Users className="w-4 h-4 mr-2" />, href: '/community' },
     { name: 'Contact Us', icon: <Mail className="w-4 h-4 mr-2" />, href: '/contact-us' },
@@ -63,10 +67,85 @@ const Navbar = () => {
               Home
             </Link>
 
-            {/* Services Dropdown */}
-            <div ref={dropdownRef} className="relative">
+            {/* Products Dropdown */}
+            <div ref={productsDropdownRef} className="relative">
               <button 
-                onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                onClick={() => {
+                  setIsProductsDropdownOpen(!isProductsDropdownOpen);
+                  setIsServicesDropdownOpen(false);
+                }}
+                className="flex items-center text-foreground/80 hover:text-foreground transition-colors"
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Products
+                {isProductsDropdownOpen ? (
+                  <ChevronUp className="w-4 h-4 ml-1" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 ml-1" />
+                )}
+              </button>
+
+              {/* Products Dropdown Menu */}
+              {isProductsDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-background rounded-md shadow-lg border border-border z-50">
+                  <div className="py-2">
+                    <Link 
+                      to="/products"
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsProductsDropdownOpen(false)}
+                    >
+                      All Products
+                    </Link>
+                    
+                    <div className="px-4 py-2 text-xs font-semibold text-muted-foreground">Categories</div>
+                    
+                    <Link 
+                      to="/products#resume-tools"
+                      className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsProductsDropdownOpen(false)}
+                    >
+                      <FileSparkle className="w-4 h-4 mr-2 text-jobonboard-blue" />
+                      Resume Tools
+                    </Link>
+                    
+                    <Link 
+                      to="/products#job-search"
+                      className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsProductsDropdownOpen(false)}
+                    >
+                      <Search className="w-4 h-4 mr-2 text-jobonboard-green" />
+                      Job Search Tools
+                    </Link>
+                    
+                    <Link 
+                      to="/products#interview-tools"
+                      className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsProductsDropdownOpen(false)}
+                    >
+                      <BookOpen className="w-4 h-4 mr-2 text-jobonboard-purple" />
+                      Interview Prep
+                    </Link>
+                    
+                    <Link 
+                      to="/products#premium-services"
+                      className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
+                      onClick={() => setIsProductsDropdownOpen(false)}
+                    >
+                      <Diamond className="w-4 h-4 mr-2 text-amber-500" />
+                      Premium Services
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Services Dropdown */}
+            <div ref={servicesDropdownRef} className="relative">
+              <button 
+                onClick={() => {
+                  setIsServicesDropdownOpen(!isServicesDropdownOpen);
+                  setIsProductsDropdownOpen(false);
+                }}
                 className="flex items-center text-foreground/80 hover:text-foreground transition-colors"
               >
                 <Briefcase className="w-4 h-4 mr-2" />
@@ -129,7 +208,7 @@ const Navbar = () => {
             </div>
 
             {/* Other Nav Items */}
-            {navItems.slice(1).map((item) => (
+            {navItems.map((item) => (
               <Link 
                 key={item.name}
                 to={item.href} 
@@ -186,6 +265,16 @@ const Navbar = () => {
               >
                 <Home className="w-4 h-4 mr-2" />
                 Home
+              </Link>
+              
+              {/* Products in mobile view */}
+              <Link 
+                to="/products"
+                className="flex items-center text-foreground/80 hover:text-foreground p-2 rounded-md"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Products
               </Link>
               
               {/* Services in mobile view */}
