@@ -1,6 +1,5 @@
-
 import { ArrowRight, FileText, Sparkles, BookOpen, CheckCircle, Zap, BarChart3, Diamond, Award, Search, List, Users, DollarSign, Briefcase, HelpCircle, GitCommit } from 'lucide-react';
-import { ProductItem } from './ProductCategory';
+import { Product } from './ProductCategory';
 
 export interface ProductCategory {
   id: string;
@@ -9,7 +8,7 @@ export interface ProductCategory {
   bgColor: string;
   iconColor: string;
   icon: typeof FileText;
-  products: ProductItem[];
+  products: Product[];
 }
 
 // Product categories with their respective items
