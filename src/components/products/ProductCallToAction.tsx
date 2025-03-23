@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const ProductCallToAction = () => {
   return (
@@ -12,11 +13,11 @@ const ProductCallToAction = () => {
             Start with our free tools or upgrade to premium services for personalized guidance and exclusive features.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button size="lg" className="bg-jobonboard-purple hover:bg-jobonboard-purple-light">
-              Get Started Free
+            <Button size="lg" className="bg-jobonboard-purple hover:bg-jobonboard-purple-light" asChild>
+              <Link to="/signup">Get Started Free</Link>
             </Button>
-            <Button size="lg" variant="outline">
-              Explore Premium
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/products#premium-services">Explore Premium</Link>
             </Button>
           </div>
         </div>

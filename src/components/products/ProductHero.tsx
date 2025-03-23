@@ -3,6 +3,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LucideIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface QuickNavItem {
   id: string;
@@ -26,11 +27,11 @@ const ProductHero = ({ categories }: ProductHeroProps) => {
             Professional tools and services designed to help you prepare, find opportunities, and grow in your career
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button size="lg" className="bg-jobonboard-purple hover:bg-jobonboard-purple-light">
-              Explore All Products
+            <Button size="lg" className="bg-jobonboard-purple hover:bg-jobonboard-purple-light" asChild>
+              <Link to="/products">Explore All Products</Link>
             </Button>
-            <Button size="lg" variant="outline">
-              View Pricing
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/services#pricing">View Pricing</Link>
             </Button>
           </div>
         </div>
@@ -38,9 +39,9 @@ const ProductHero = ({ categories }: ProductHeroProps) => {
         {/* Quick navigation */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
           {categories.map((category) => (
-            <a 
+            <Link 
               key={category.id} 
-              href={`#${category.id}`}
+              to={`#${category.id}`}
               className="flex items-center p-4 rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all group"
             >
               <div className={`w-12 h-12 ${category.bgColor} rounded-lg flex items-center justify-center mr-4`}>
@@ -53,7 +54,7 @@ const ProductHero = ({ categories }: ProductHeroProps) => {
                   <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

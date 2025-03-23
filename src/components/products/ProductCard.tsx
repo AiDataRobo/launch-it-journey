@@ -3,6 +3,7 @@ import React from 'react';
 import { LucideIcon } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 interface ProductCardProps {
   id: string;
@@ -25,6 +26,22 @@ const ProductCard = ({
   bgColor,
   premium,
 }: ProductCardProps) => {
+  // Determine the appropriate link based on product type
+  const getProductLink = () => {
+    if (premium) {
+      return `/services/premium/${id}`;
+    }
+    
+    // Based on product category
+    if (id.includes('resume')) {
+      return `/services/resume-tools/${id}`;
+    } else if (id.includes('interview')) {
+      return `/services/interview-prep/${id}`;
+    } else {
+      return `/services/job-tools/${id}`;
+    }
+  };
+
   return (
     <Card className={`border ${premium ? 'border-amber-200' : 'border-gray-100'} hover:shadow-md transition-all`}>
       <CardHeader className="pb-4">
@@ -38,7 +55,11 @@ const ProductCard = ({
             </span>
           )}
         </div>
-        <CardTitle className="text-xl">{title}</CardTitle>
+        <CardTitle className="text-xl">
+          <Link to={getProductLink()} className="hover:text-jobonboard-purple transition-colors">
+            {title}
+          </Link>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <CardDescription className="text-gray-600 min-h-[80px]">
@@ -56,8 +77,11 @@ const ProductCard = ({
                   ? 'bg-jobonboard-green hover:bg-jobonboard-green-light' 
                   : 'bg-jobonboard-purple hover:bg-jobonboard-purple-light'
           }`}
+          asChild
         >
-          {cta}
+          <Link to={getProductLink()}>
+            {cta}
+          </Link>
         </Button>
       </CardFooter>
     </Card>
