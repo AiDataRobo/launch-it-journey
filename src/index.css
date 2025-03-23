@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,11 +58,11 @@
   }
 
   .text-gradient-primary {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-jobonboard-blue to-jobonboard-green;
+    @apply bg-gradient-to-br from-jobonboard-purple via-jobonboard-purple/90 to-jobonboard-blue bg-clip-text text-transparent;
   }
 
   .text-gradient-secondary {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-jobonboard-purple to-jobonboard-blue;
+    @apply bg-gradient-to-br from-jobonboard-blue via-jobonboard-blue/90 to-jobonboard-green bg-clip-text text-transparent;
   }
 
   .bg-glass {
@@ -91,6 +90,10 @@
   .hide-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }
 
