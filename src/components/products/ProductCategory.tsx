@@ -8,7 +8,10 @@ export interface Product {
   id: string;
   title: string;
   description: string;
+  icon: LucideIcon;
   cta: string;
+  color?: string;
+  bgColor?: string;
   premium: boolean;
 }
 
