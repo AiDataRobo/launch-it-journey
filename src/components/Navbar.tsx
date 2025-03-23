@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info, Mail, LogIn, UserPlus, ChevronDown, ChevronUp, FileSparkle, Search, BookOpen, Diamond } from 'lucide-react';
+import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info, Mail, LogIn, UserPlus, ChevronDown, ChevronUp, FileText, Search, BookOpen, Diamond } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +11,6 @@ const Navbar = () => {
   const servicesDropdownRef = useRef<HTMLDivElement>(null);
   const productsDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle scroll event to change navbar appearance
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -20,7 +19,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (servicesDropdownRef.current && !servicesDropdownRef.current.contains(event.target as Node)) {
@@ -51,14 +49,11 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <span className="text-xl font-bold text-foreground">Job<span className="text-jobonboard-blue">Onboard</span></span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            {/* Home Link */}
             <Link 
               to="/" 
               className="flex items-center text-foreground/80 hover:text-foreground transition-colors"
@@ -67,7 +62,6 @@ const Navbar = () => {
               Home
             </Link>
 
-            {/* Products Dropdown */}
             <div ref={productsDropdownRef} className="relative">
               <button 
                 onClick={() => {
@@ -85,7 +79,6 @@ const Navbar = () => {
                 )}
               </button>
 
-              {/* Products Dropdown Menu */}
               {isProductsDropdownOpen && (
                 <div className="absolute top-full left-0 mt-2 w-64 bg-background rounded-md shadow-lg border border-border z-50">
                   <div className="py-2">
@@ -104,7 +97,7 @@ const Navbar = () => {
                       className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
                       onClick={() => setIsProductsDropdownOpen(false)}
                     >
-                      <FileSparkle className="w-4 h-4 mr-2 text-jobonboard-blue" />
+                      <FileText className="w-4 h-4 mr-2 text-jobonboard-blue" />
                       Resume Tools
                     </Link>
                     
@@ -139,7 +132,6 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Services Dropdown */}
             <div ref={servicesDropdownRef} className="relative">
               <button 
                 onClick={() => {
@@ -157,7 +149,6 @@ const Navbar = () => {
                 )}
               </button>
 
-              {/* Services Dropdown Menu */}
               {isServicesDropdownOpen && (
                 <div className="absolute top-full left-0 mt-2 w-64 bg-background rounded-md shadow-lg border border-border z-50">
                   <div className="py-2">
@@ -207,7 +198,6 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Other Nav Items */}
             {navItems.map((item) => (
               <Link 
                 key={item.name}
@@ -220,7 +210,6 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Actions */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="outline" size="sm" asChild>
               <Link to="/login" className="flex items-center gap-1">
@@ -236,7 +225,6 @@ const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden space-x-4">
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -253,7 +241,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-background/95 backdrop-blur-md border-t">
           <div className="container px-6 py-4">
@@ -267,7 +254,6 @@ const Navbar = () => {
                 Home
               </Link>
               
-              {/* Products in mobile view */}
               <Link 
                 to="/products"
                 className="flex items-center text-foreground/80 hover:text-foreground p-2 rounded-md"
@@ -277,7 +263,6 @@ const Navbar = () => {
                 Products
               </Link>
               
-              {/* Services in mobile view */}
               <Link 
                 to="/services"
                 className="flex items-center text-foreground/80 hover:text-foreground p-2 rounded-md"
@@ -287,7 +272,6 @@ const Navbar = () => {
                 Services
               </Link>
               
-              {/* Other nav items */}
               {navItems.slice(1).map((item) => (
                 <Link 
                   key={item.name}

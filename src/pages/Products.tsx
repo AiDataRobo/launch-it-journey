@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { ArrowRight, FileSparkle, Sparkles, BookOpen, CheckCircle, Zap, BarChart3, Diamond, Award, Search, List, Users, DollarSign, Briefcase, HelpCircle, GitCommit } from 'lucide-react';
+import { ArrowRight, FileText, Sparkles, BookOpen, CheckCircle, Zap, BarChart3, Diamond, Award, Search, List, Users, DollarSign, Briefcase, HelpCircle, GitCommit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import NavbarWrap from '@/components/NavbarWrap';
@@ -15,7 +14,7 @@ const Products = () => {
       description: 'Enhance your professional presence with our cutting-edge tools designed to make you stand out to employers.',
       bgColor: 'bg-jobonboard-blue/5',
       iconColor: 'text-jobonboard-blue',
-      icon: FileSparkle,
+      icon: FileText,
       products: [
         {
           id: 'ai-resume-scanner',
@@ -31,7 +30,7 @@ const Products = () => {
           id: 'resume-builder',
           title: 'Resume Builder',
           description: 'Create professional resumes with our easy-to-use builder featuring ATS-friendly templates.',
-          icon: FileSparkle,
+          icon: FileText,
           cta: 'Build My Resume',
           color: 'text-jobonboard-blue',
           bgColor: 'bg-jobonboard-blue/10',
