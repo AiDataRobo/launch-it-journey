@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Home, Briefcase, ShoppingCart, Users, Info, Mail, LogIn, UserPlus, ChevronDown, ChevronUp, FileText, Search, BookOpen, Diamond } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -34,8 +35,9 @@ const Navbar = () => {
     };
   }, []);
 
+  // Removing the 'Home' item from the navItems array to avoid duplication
   const navItems = [
-    { name: 'Home', icon: <Home className="w-4 h-4 mr-2" />, href: '/' },
+    // Home button removed from here to avoid duplication
     { name: 'About Us', icon: <Info className="w-4 h-4 mr-2" />, href: '/about-us' },
     { name: 'Community', icon: <Users className="w-4 h-4 mr-2" />, href: '/community' },
     { name: 'Contact Us', icon: <Mail className="w-4 h-4 mr-2" />, href: '/contact-us' },
@@ -272,7 +274,7 @@ const Navbar = () => {
                 Services
               </Link>
               
-              {navItems.slice(1).map((item) => (
+              {navItems.map((item) => (
                 <Link 
                   key={item.name}
                   to={item.href} 
