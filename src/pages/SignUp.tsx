@@ -37,9 +37,9 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
-    // Redirect to home if already logged in
+    // Redirect to dashboard if already logged in
     if (user) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [user, navigate]);
 

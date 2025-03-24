@@ -14,6 +14,7 @@ import ContactUs from "./pages/ContactUs";
 import CareerPath from "./pages/CareerPath";
 import Services from "./pages/Services";
 import Products from "./pages/Products";
+import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/contact-us" element={<ContactUs />} />
