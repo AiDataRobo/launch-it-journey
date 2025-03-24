@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useAuth } from '@/context/AuthContext';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -24,6 +26,9 @@ const formSchema = z.object({
 
 const Login = () => {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,11 +37,24 @@ const Login = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // In a real application, this would connect to your auth system
-    console.log(values);
-    toast.success("Logged in successfully!");
-    navigate('/');
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    
+    try {
+      const { error } = await signIn(values.email, values.password);
+      
+      if (error) {
+        toast.error(error.message || "Invalid email or password");
+      } else {
+        toast.success("Logged in successfully!");
+        navigate('/');
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -84,8 +102,19 @@ const Login = () => {
                     Forgot password?
                   </a>
                 </div>
-                <Button type="submit" className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple-light">
-                  Log In
+                <Button 
+                  type="submit" 
+                  className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple-light"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Logging in...
+                    </>
+                  ) : (
+                    "Log In"
+                  )}
                 </Button>
               </form>
             </Form>
