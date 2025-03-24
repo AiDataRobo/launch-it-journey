@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface AuthContextType {
   user: User | null;
@@ -11,6 +12,8 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any | null; data: any | null }>;
   signIn: (email: string, password: string) => Promise<{ error: any | null; data: any | null }>;
   signOut: () => Promise<void>;
+  getProfile: () => Promise<any>;
+  updateProfile: (data: { full_name?: string }) => Promise<{ error: any | null; data: any | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -54,6 +57,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
 
+      if (!error) {
+        toast.success("Sign up successful! Please check your email for confirmation.");
+      }
+
       return { data, error };
     } catch (error) {
       console.error('Error in sign up:', error);
@@ -68,6 +75,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
       });
 
+      if (!error) {
+        toast.success("Logged in successfully!");
+        navigate('/');
+      }
+
       return { data, error };
     } catch (error) {
       console.error('Error in sign in:', error);
@@ -76,8 +88,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/');
+    try {
+      await supabase.auth.signOut();
+      toast.success("Logged out successfully!");
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast.error("Failed to log out. Please try again.");
+    }
+  };
+
+  const getProfile = async () => {
+    try {
+      if (!user) throw new Error('User not logged in');
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error getting profile:', error);
+      return { data: null, error };
+    }
+  };
+
+  const updateProfile = async (updates: { full_name?: string }) => {
+    try {
+      if (!user) throw new Error('User not logged in');
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', user.id)
+        .select();
+
+      if (!error) {
+        toast.success("Profile updated successfully!");
+      }
+
+      return { data, error };
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      return { data: null, error };
+    }
   };
 
   const value = {
@@ -87,6 +144,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signIn,
     signOut,
+    getProfile,
+    updateProfile
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

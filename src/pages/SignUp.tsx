@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -33,9 +33,16 @@ const formSchema = z.object({
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { signUp } = useAuth();
+  const { signUp, user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   
+  useEffect(() => {
+    // Redirect to home if already logged in
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -153,9 +160,9 @@ const SignUp = () => {
               <Separator className="my-4" />
               <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <a href="/login" className="text-jobonboard-purple hover:underline">
+                <Link to="/login" className="text-jobonboard-purple hover:underline">
                   Log In
-                </a>
+                </Link>
               </p>
             </div>
           </CardContent>
