@@ -14,6 +14,21 @@ export const useSidebarToggle = (initialState = false) => {
     localStorage.setItem('sidebarOpen', JSON.stringify(isOpen));
   }, [isOpen]);
 
+  // Add keyboard shortcut (Ctrl+B or Cmd+B) to toggle sidebar
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
+        event.preventDefault();
+        setIsOpen(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const toggle = () => setIsOpen(!isOpen);
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);

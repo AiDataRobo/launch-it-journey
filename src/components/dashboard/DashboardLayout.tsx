@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Footer from '@/components/Footer';
-import { Bell, Settings, Menu, X, LogOut } from 'lucide-react';
+import { Bell, Settings, Menu, X, LogOut, Home, Briefcase, BookOpen, Users, MessageSquare, BarChart3, CircleUser, ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useSidebarToggle from '@/hooks/use-sidebar-toggle';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { 
   Sidebar, 
   SidebarProvider, 
@@ -17,7 +19,10 @@ import {
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarMenuButton
+  SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton
 } from '@/components/ui/sidebar';
 
 type DashboardLayoutProps = {
@@ -26,8 +31,21 @@ type DashboardLayoutProps = {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const { user, signOut } = useAuth();
-  const { isOpen, toggle } = useSidebarToggle(true); // Set default to true for visibility
+  const { isOpen, toggle } = useSidebarToggle(true);
   const [isMobile, setIsMobile] = useState(false);
+  const location = useLocation();
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({
+    skills: false,
+    network: false
+  });
+
+  // Toggle expanded state for a menu section
+  const toggleMenuSection = (section: string) => {
+    setExpandedMenus(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   // Check if the viewport is mobile
   useEffect(() => {
@@ -55,6 +73,34 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     ? getInitials(user.email.split('@')[0]) 
     : 'U';
 
+  // Check if a path is active
+  const isActivePath = (path: string) => {
+    return location.pathname === path;
+  };
+
+  // Main menu items
+  const mainMenuItems = [
+    { id: 'dashboard', path: '/dashboard', label: 'Dashboard', icon: Home },
+    { id: 'profile', path: '/profile', label: 'Profile', icon: CircleUser },
+    { id: 'job-search', path: '/job-search', label: 'Job Search', icon: Briefcase },
+    { id: 'resume', path: '/resume-builder', label: 'Resume Builder', icon: BookOpen },
+    { id: 'interviews', path: '/interviews', label: 'Interviews', icon: BarChart3 }
+  ];
+
+  // Skill submenu items
+  const skillMenuItems = [
+    { id: 'skill-assessment', path: '/skills/assessment', label: 'Skill Assessment' },
+    { id: 'learning', path: '/skills/learning', label: 'Learning Resources' },
+    { id: 'certifications', path: '/skills/certifications', label: 'Certifications' }
+  ];
+
+  // Network submenu items
+  const networkMenuItems = [
+    { id: 'connections', path: '/network/connections', label: 'Connections' },
+    { id: 'mentors', path: '/network/mentors', label: 'Find Mentors' },
+    { id: 'communities', path: '/network/communities', label: 'Communities' }
+  ];
+
   return (
     <SidebarProvider defaultOpen={!isMobile}>
       <div className="flex flex-col min-h-screen bg-background">
@@ -64,7 +110,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <Button 
               onClick={toggle}
               size="icon"
-              className="rounded-full bg-jobonboard-purple shadow-lg"
+              className="rounded-full bg-jobonboard-purple shadow-lg hover:bg-jobonboard-purple/90"
             >
               {isOpen ? <X /> : <Menu />}
             </Button>
@@ -75,7 +121,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <SidebarHeader>
               <div className="flex items-center space-x-3 p-2">
                 <Avatar>
-                  <AvatarFallback>{userInitials}</AvatarFallback>
+                  <AvatarImage src={user?.user_metadata?.avatar_url} />
+                  <AvatarFallback className="bg-jobonboard-purple text-white">{userInitials}</AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="font-medium text-sm">{user?.email}</p>
@@ -89,29 +136,78 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                 <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
+                    {mainMenuItems.map((item) => (
+                      <SidebarMenuItem key={item.id}>
+                        <SidebarMenuButton 
+                          isActive={isActivePath(item.path)}
+                          tooltip={item.label}
+                        >
+                          <item.icon size={18} />
+                          <span>{item.label}</span>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+
+                    {/* Skills & Learning - Collapsible Section */}
                     <SidebarMenuItem>
-                      <SidebarMenuButton>Dashboard</SidebarMenuButton>
+                      <SidebarMenuButton 
+                        onClick={() => toggleMenuSection('skills')}
+                        isActive={skillMenuItems.some(item => isActivePath(item.path))}
+                      >
+                        <BookOpen size={18} />
+                        <span>Skills & Learning</span>
+                        {expandedMenus.skills ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                      </SidebarMenuButton>
+                      
+                      {expandedMenus.skills && (
+                        <SidebarMenuSub>
+                          {skillMenuItems.map((item) => (
+                            <SidebarMenuSubItem key={item.id}>
+                              <SidebarMenuSubButton 
+                                isActive={isActivePath(item.path)}
+                              >
+                                {item.label}
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      )}
                     </SidebarMenuItem>
+
+                    {/* Network - Collapsible Section */}
                     <SidebarMenuItem>
-                      <SidebarMenuButton>Profile</SidebarMenuButton>
+                      <SidebarMenuButton 
+                        onClick={() => toggleMenuSection('network')}
+                        isActive={networkMenuItems.some(item => isActivePath(item.path))}
+                      >
+                        <Users size={18} />
+                        <span>Network</span>
+                        {expandedMenus.network ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                      </SidebarMenuButton>
+                      
+                      {expandedMenus.network && (
+                        <SidebarMenuSub>
+                          {networkMenuItems.map((item) => (
+                            <SidebarMenuSubItem key={item.id}>
+                              <SidebarMenuSubButton 
+                                isActive={isActivePath(item.path)}
+                              >
+                                {item.label}
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      )}
                     </SidebarMenuItem>
+
                     <SidebarMenuItem>
-                      <SidebarMenuButton>Job Search</SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton>Resume Builder</SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton>Interviews</SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton>Skills & Learning</SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton>Network</SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton>Settings</SidebarMenuButton>
+                      <SidebarMenuButton 
+                        isActive={isActivePath('/settings')}
+                        tooltip="Settings"
+                      >
+                        <Settings size={18} />
+                        <span>Settings</span>
+                      </SidebarMenuButton>
                     </SidebarMenuItem>
                   </SidebarMenu>
                 </SidebarGroupContent>
