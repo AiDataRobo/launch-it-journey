@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/navbar';
 
 // Update the component to pass props correctly to Navbar
 // The error indicates that Navbar doesn't accept a className prop
