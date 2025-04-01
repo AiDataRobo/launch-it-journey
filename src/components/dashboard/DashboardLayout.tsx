@@ -1,11 +1,23 @@
 
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Bell, Settings, Menu, X } from 'lucide-react';
+import { Bell, Settings, Menu, X, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { 
+  Sidebar, 
+  SidebarProvider, 
+  SidebarContent, 
+  SidebarHeader, 
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton
+} from '@/components/ui/sidebar';
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -32,93 +44,89 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     : 'U';
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <Navbar />
-      
-      <div className="flex-grow flex">
-        {/* Mobile sidebar toggle */}
-        <div className="lg:hidden fixed bottom-4 right-4 z-50">
-          <Button 
-            onClick={toggleSidebar}
-            size="icon"
-            className="rounded-full bg-jobonboard-purple shadow-lg"
-          >
-            {sidebarOpen ? <X /> : <Menu />}
-          </Button>
-        </div>
-
-        {/* Sidebar */}
-        <div 
-          className={`fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-40 lg:translate-x-0 ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          <div className="p-4 border-b">
-            <div className="flex items-center space-x-3">
-              <Avatar>
-                <AvatarFallback>{userInitials}</AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-medium text-sm">{user?.email}</p>
-                <p className="text-xs text-muted-foreground">Dashboard</p>
-              </div>
-            </div>
-          </div>
-          
-          <nav className="p-4 space-y-2">
-            <a href="#" className="flex items-center p-2 rounded-md hover:bg-gray-100">
-              <span className="text-sm font-medium">Dashboard</span>
-            </a>
-            <a href="#" className="flex items-center p-2 rounded-md hover:bg-gray-100">
-              <span className="text-sm font-medium">Profile</span>
-            </a>
-            <a href="#" className="flex items-center p-2 rounded-md hover:bg-gray-100">
-              <span className="text-sm font-medium">Job Search</span>
-            </a>
-            <a href="#" className="flex items-center p-2 rounded-md hover:bg-gray-100">
-              <span className="text-sm font-medium">Resume Builder</span>
-            </a>
-            <a href="#" className="flex items-center p-2 rounded-md hover:bg-gray-100">
-              <span className="text-sm font-medium">Interviews</span>
-            </a>
-            <a href="#" className="flex items-center p-2 rounded-md hover:bg-gray-100">
-              <span className="text-sm font-medium">Skills & Learning</span>
-            </a>
-            <a href="#" className="flex items-center p-2 rounded-md hover:bg-gray-100">
-              <span className="text-sm font-medium">Network</span>
-            </a>
-            <a href="#" className="flex items-center p-2 rounded-md hover:bg-gray-100">
-              <span className="text-sm font-medium">Settings</span>
-            </a>
-          </nav>
-          
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
+    <SidebarProvider defaultOpen={false}>
+      <div className="flex flex-col min-h-screen bg-background">
+        <div className="flex-grow flex relative">
+          {/* Mobile sidebar toggle */}
+          <div className="lg:hidden fixed bottom-4 right-4 z-50">
             <Button 
-              onClick={signOut} 
-              variant="outline" 
-              className="w-full text-red-500 hover:text-red-700 hover:bg-red-50"
+              onClick={toggleSidebar}
+              size="icon"
+              className="rounded-full bg-jobonboard-purple shadow-lg"
             >
-              Sign Out
+              {sidebarOpen ? <X /> : <Menu />}
             </Button>
           </div>
-        </div>
 
-        {/* Overlay */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/20 z-30 lg:hidden"
-            onClick={toggleSidebar}
-          />
-        )}
+          {/* Floating Sidebar */}
+          <Sidebar variant="floating" collapsible="offcanvas">
+            <SidebarHeader>
+              <div className="flex items-center space-x-3 p-2">
+                <Avatar>
+                  <AvatarFallback>{userInitials}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-medium text-sm">{user?.email}</p>
+                  <p className="text-xs text-muted-foreground">Dashboard</p>
+                </div>
+              </div>
+            </SidebarHeader>
+            
+            <SidebarContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>Dashboard</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>Profile</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>Job Search</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>Resume Builder</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>Interviews</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>Skills & Learning</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>Network</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton>Settings</SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            </SidebarContent>
+            
+            <SidebarFooter>
+              <Button 
+                onClick={signOut} 
+                variant="outline" 
+                className="w-full text-red-500 hover:text-red-700 hover:bg-red-50 flex items-center gap-2"
+              >
+                <LogOut size={16} />
+                Sign Out
+              </Button>
+            </SidebarFooter>
+          </Sidebar>
 
-        {/* Main content */}
-        <div className="flex-grow lg:ml-64">
-          {children}
+          {/* Main content */}
+          <div className="flex-grow lg:ml-4 p-4">
+            {children}
+          </div>
         </div>
+        
+        <Footer />
       </div>
-      
-      <Footer />
-    </div>
+    </SidebarProvider>
   );
 };
 
