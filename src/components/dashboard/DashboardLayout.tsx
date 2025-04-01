@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import Footer from '@/components/Footer';
-import { Bell, Settings, Menu, X, LogOut, Home, Briefcase, BookOpen, Users, MessageSquare, BarChart3, CircleUser, ChevronDown, ChevronRight } from 'lucide-react';
+import { Bell, Settings, Menu, X, LogOut, Home, Briefcase, BookOpen, Users, MessageSquare, BarChart3, CircleUser, ChevronDown, ChevronRight, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -82,6 +82,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const mainMenuItems = [
     { id: 'dashboard', path: '/dashboard', label: 'Dashboard', icon: Home },
     { id: 'profile', path: '/profile', label: 'Profile', icon: CircleUser },
+    { id: 'linkedin', path: '/linkedin-optimization', label: 'LinkedIn Optimizer', icon: Linkedin },
     { id: 'job-search', path: '/job-search', label: 'Job Search', icon: Briefcase },
     { id: 'resume', path: '/resume-builder', label: 'Resume Builder', icon: BookOpen },
     { id: 'interviews', path: '/interviews', label: 'Interviews', icon: BarChart3 }
@@ -141,9 +142,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                         <SidebarMenuButton 
                           isActive={isActivePath(item.path)}
                           tooltip={item.label}
+                          asChild
                         >
-                          <item.icon size={18} />
-                          <span>{item.label}</span>
+                          <Link to={item.path}>
+                            <item.icon size={18} />
+                            <span>{item.label}</span>
+                          </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
@@ -165,8 +169,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                             <SidebarMenuSubItem key={item.id}>
                               <SidebarMenuSubButton 
                                 isActive={isActivePath(item.path)}
+                                asChild
                               >
-                                {item.label}
+                                <Link to={item.path}>
+                                  {item.label}
+                                </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           ))}
@@ -191,8 +198,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                             <SidebarMenuSubItem key={item.id}>
                               <SidebarMenuSubButton 
                                 isActive={isActivePath(item.path)}
+                                asChild
                               >
-                                {item.label}
+                                <Link to={item.path}>
+                                  {item.label}
+                                </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           ))}
@@ -204,9 +214,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
                       <SidebarMenuButton 
                         isActive={isActivePath('/settings')}
                         tooltip="Settings"
+                        asChild
                       >
-                        <Settings size={18} />
-                        <span>Settings</span>
+                        <Link to="/settings">
+                          <Settings size={18} />
+                          <span>Settings</span>
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   </SidebarMenu>

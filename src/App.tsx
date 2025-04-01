@@ -15,6 +15,7 @@ import CareerPath from "./pages/CareerPath";
 import Services from "./pages/Services";
 import Products from "./pages/Products";
 import Dashboard from "./pages/Dashboard";
+import LinkedInOptimization from "./pages/LinkedInOptimization";
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/career-path" element={<CareerPath />} />
             <Route path="/services" element={<Services />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/linkedin-optimization" element={<LinkedInOptimization />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
