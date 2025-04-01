@@ -1,8 +1,18 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const useSidebarToggle = (initialState = false) => {
-  const [isOpen, setIsOpen] = useState(initialState);
+  // Use localStorage to persist the sidebar state
+  const [isOpen, setIsOpen] = useState(() => {
+    // Try to get the stored value on initialization
+    const storedValue = localStorage.getItem('sidebarOpen');
+    return storedValue !== null ? JSON.parse(storedValue) : initialState;
+  });
+
+  // Update localStorage when isOpen changes
+  useEffect(() => {
+    localStorage.setItem('sidebarOpen', JSON.stringify(isOpen));
+  }, [isOpen]);
 
   const toggle = () => setIsOpen(!isOpen);
   const open = () => setIsOpen(true);

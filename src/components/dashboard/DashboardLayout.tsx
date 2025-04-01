@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '@/components/Footer';
 import { Bell, Settings, Menu, X, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import useSidebarToggle from '@/hooks/use-sidebar-toggle';
 import { 
   Sidebar, 
   SidebarProvider, 
@@ -25,11 +26,22 @@ type DashboardLayoutProps = {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const { user, signOut } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isOpen, toggle } = useSidebarToggle(true); // Set default to true for visibility
+  const [isMobile, setIsMobile] = useState(false);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  // Check if the viewport is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   const getInitials = (name: string) => {
     return name
@@ -44,22 +56,22 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     : 'U';
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={!isMobile}>
       <div className="flex flex-col min-h-screen bg-background">
         <div className="flex-grow flex relative">
           {/* Mobile sidebar toggle */}
           <div className="lg:hidden fixed bottom-4 right-4 z-50">
             <Button 
-              onClick={toggleSidebar}
+              onClick={toggle}
               size="icon"
               className="rounded-full bg-jobonboard-purple shadow-lg"
             >
-              {sidebarOpen ? <X /> : <Menu />}
+              {isOpen ? <X /> : <Menu />}
             </Button>
           </div>
 
           {/* Floating Sidebar */}
-          <Sidebar variant="floating" collapsible="offcanvas">
+          <Sidebar variant="floating" collapsible={isMobile ? "offcanvas" : "icon"}>
             <SidebarHeader>
               <div className="flex items-center space-x-3 p-2">
                 <Avatar>
