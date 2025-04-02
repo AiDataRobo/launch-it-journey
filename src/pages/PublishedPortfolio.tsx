@@ -32,7 +32,7 @@ const PublishedPortfolio = () => {
         if (!data) {
           setError('Portfolio not found');
         } else {
-          setPortfolio(data);
+          setPortfolio(data as PublishedPortfolioType);
         }
       } catch (err) {
         console.error('Error fetching portfolio:', err);
