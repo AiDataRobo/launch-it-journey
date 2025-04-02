@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,7 +62,7 @@ const PortfolioLinkedInImport: React.FC<PortfolioLinkedInImportProps> = ({ onSta
           toast({
             title: "Import completed!",
             description: "Your LinkedIn data has been successfully imported. Now you can customize your portfolio.",
-            variant: "success",
+            variant: "default",
           });
           // Here you'd redirect to the editor with the imported data
         }, 1500);

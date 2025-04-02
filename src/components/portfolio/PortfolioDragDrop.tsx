@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +9,8 @@ import {
   Plus, Image, ExternalLink, PanelLeft, Download, X
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Mail } from '@/components/portfolio/Mail';
+import { MapPin } from '@/components/portfolio/MapPin';
 
 type SectionType = {
   id: string;
@@ -98,45 +99,30 @@ const PortfolioDragDrop = () => {
     }
   };
 
-  const handleDragStart = (e: React.DragEvent, index: number) => {
+  const handleDragStart = (index: number) => {
     setDraggingId(sections[index].id);
     draggedItemRef.current = index;
-    e.dataTransfer.effectAllowed = 'move';
-    // This makes the dragged element transparent in many browsers
-    setTimeout(() => {
-      if (e.target instanceof HTMLElement) {
-        e.target.style.opacity = '0.4';
-      }
-    }, 0);
   };
 
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
+  const handleDragOver = (index: number) => {
     if (draggedItemRef.current === null) return;
     
     const draggedOverItem = sections[index];
     const draggedItem = sections[draggedItemRef.current];
     
-    // If the item is dragged over itself, ignore
     if (draggedOverItem.id === draggedItem.id) return;
     
-    // Filter out the currently dragged item
     const newSections = sections.filter((_, idx) => idx !== draggedItemRef.current);
     
-    // Add the dragged item after the dragged over item
     newSections.splice(index, 0, draggedItem);
     
-    // Update state
     setSections(newSections);
     draggedItemRef.current = index;
   };
 
-  const handleDragEnd = (e: React.DragEvent) => {
+  const handleDragEnd = () => {
     setDraggingId(null);
     draggedItemRef.current = null;
-    if (e.target instanceof HTMLElement) {
-      e.target.style.opacity = '1';
-    }
     
     toast({
       title: "Section reordered",
@@ -167,12 +153,11 @@ const PortfolioDragDrop = () => {
       description: "Your portfolio is being prepared for download as PDF.",
     });
     
-    // Simulate PDF generation
     setTimeout(() => {
       toast({
         title: "PDF Ready",
         description: "Your portfolio has been exported as PDF and is ready to download.",
-        variant: "success",
+        variant: "default",
       });
     }, 2000);
   };
@@ -181,14 +166,13 @@ const PortfolioDragDrop = () => {
     toast({
       title: "Portfolio Published!",
       description: "Your portfolio is now live at username.jobonboard.com",
-      variant: "success",
+      variant: "default",
     });
   };
 
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        {/* Left sidebar - Sections to add */}
         <div className="md:col-span-3 space-y-4">
           <Card className="border border-input">
             <CardContent className="p-4">
@@ -270,7 +254,6 @@ const PortfolioDragDrop = () => {
           </Card>
         </div>
 
-        {/* Center - Portfolio editor */}
         <div className="md:col-span-9">
           <Tabs defaultValue="edit" onValueChange={setActiveView} className="w-full">
             <div className="flex justify-between items-center mb-4">
@@ -324,10 +307,10 @@ const PortfolioDragDrop = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3 }}
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, index)}
-                            onDragOver={(e) => handleDragOver(e, index)}
+                            drag
+                            onDragStart={() => handleDragStart(index)}
                             onDragEnd={handleDragEnd}
+                            onDrag={() => handleDragOver(index)}
                           >
                             <div className="flex items-center justify-between mb-3">
                               <div className="flex items-center gap-2">
@@ -358,60 +341,133 @@ const PortfolioDragDrop = () => {
                               </div>
                             </div>
 
-                            {/* Content editor UI would go here */}
-                            <div className="bg-gray-50 p-3 rounded-md">
-                              {section.type === 'about' && (
-                                <textarea
-                                  className="w-full p-2 min-h-24 border rounded"
-                                  placeholder="Write about yourself..."
-                                  defaultValue={section.content.description}
-                                ></textarea>
-                              )}
-                              
-                              {section.type === 'experience' && (
-                                <div className="space-y-3">
-                                  {section.content.map((exp: any, i: number) => (
-                                    <div key={i} className="bg-white p-3 rounded border">
-                                      <input 
-                                        className="w-full p-2 border rounded mb-2" 
-                                        placeholder="Job Title"
-                                        defaultValue={exp.title}
-                                      />
-                                      <input 
-                                        className="w-full p-2 border rounded mb-2" 
-                                        placeholder="Company"
-                                        defaultValue={exp.company}
-                                      />
-                                      <input 
-                                        className="w-full p-2 border rounded mb-2" 
-                                        placeholder="Time Period"
-                                        defaultValue={exp.period}
-                                      />
-                                      <textarea 
-                                        className="w-full p-2 min-h-24 border rounded" 
-                                        placeholder="Description"
-                                        defaultValue={exp.description}
-                                      ></textarea>
+                            {section.type === 'about' && (
+                              <textarea
+                                className="w-full p-2 min-h-24 border rounded"
+                                placeholder="Write about yourself..."
+                                defaultValue={section.content.description}
+                              ></textarea>
+                            )}
+                            
+                            {section.type === 'experience' && (
+                              <div className="space-y-3">
+                                {section.content.map((exp: any, i: number) => (
+                                  <div key={i} className="bg-white p-3 rounded border">
+                                    <input 
+                                      className="w-full p-2 border rounded mb-2" 
+                                      placeholder="Job Title"
+                                      defaultValue={exp.title}
+                                    />
+                                    <input 
+                                      className="w-full p-2 border rounded mb-2" 
+                                      placeholder="Company"
+                                      defaultValue={exp.company}
+                                    />
+                                    <input 
+                                      className="w-full p-2 border rounded mb-2" 
+                                      placeholder="Time Period"
+                                      defaultValue={exp.period}
+                                    />
+                                    <textarea 
+                                      className="w-full p-2 min-h-24 border rounded" 
+                                      placeholder="Description"
+                                      defaultValue={exp.description}
+                                    ></textarea>
+                                  </div>
+                                ))}
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  className="w-full"
+                                >
+                                  <Plus size={16} className="mr-1" />
+                                  Add Experience
+                                </Button>
+                              </div>
+                            )}
+                            
+                            {section.type === 'education' && (
+                              <div className="space-y-6">
+                                {section.content.map((edu: any, i: number) => (
+                                  <div key={i} className="space-y-1">
+                                    <div className="flex justify-between">
+                                      <h3 className="font-semibold">{edu.degree}</h3>
+                                      <span className="text-gray-500">{edu.year}</span>
                                     </div>
-                                  ))}
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    className="w-full"
+                                    <p className="text-gray-600">{edu.institution}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {section.type === 'skills' && (
+                              <div className="flex flex-wrap gap-2">
+                                {section.content.map((skill: string, i: number) => (
+                                  <span 
+                                    key={i} 
+                                    className="px-3 py-1 rounded-full text-sm" 
+                                    style={{ 
+                                      backgroundColor: `${colors.primary}20`,
+                                      color: colors.primary
+                                    }}
                                   >
-                                    <Plus size={16} className="mr-1" />
-                                    Add Experience
-                                  </Button>
-                                </div>
-                              )}
-                              
-                              {/* Similar markup for other section types */}
-                              {section.type !== 'about' && section.type !== 'experience' && (
-                                <div className="flex items-center justify-center h-16 text-muted-foreground">
-                                  Content editor for {section.title}
-                                </div>
-                              )}
-                            </div>
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {section.type === 'projects' && (
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {section.content.map((project: any, i: number) => (
+                                  <div key={i} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <h3 className="font-semibold">{project.title}</h3>
+                                    <p className="text-gray-700 my-2">{project.description}</p>
+                                    <a 
+                                      href={project.link} 
+                                      className="flex items-center text-sm gap-1 hover:underline" 
+                                      style={{ color: colors.primary }}
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                    >
+                                      <ExternalLink size={14} />
+                                      View Project
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {section.type === 'testimonials' && (
+                              <div className="space-y-4">
+                                {section.content.map((testimonial: any, i: number) => (
+                                  <div key={i} className="bg-gray-50 p-4 rounded-lg border-l-4" style={{ borderLeftColor: colors.primary }}>
+                                    <p className="italic text-gray-700 mb-2">"{testimonial.quote}"</p>
+                                    <div>
+                                      <p className="font-medium">{testimonial.author}</p>
+                                      <p className="text-sm text-gray-600">{testimonial.position}</p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {section.type === 'contact' && (
+                              <div className="space-y-2">
+                                <p className="flex items-center gap-2">
+                                  <Mail size={18} className="text-gray-500" />
+                                  {section.content.email}
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <Phone size={18} className="text-gray-500" />
+                                  {section.content.phone}
+                                </p>
+                                <p className="flex items-center gap-2">
+                                  <MapPin size={18} className="text-gray-500" />
+                                  {section.content.location}
+                                </p>
+                              </div>
+                            )}
                           </motion.div>
                         ))}
                       </div>
@@ -428,7 +484,6 @@ const PortfolioDragDrop = () => {
                       backgroundColor: colors.background 
                     }}
                   >
-                    {/* Header with profile */}
                     <div 
                       className="p-8 text-white"
                       style={{ 
@@ -456,7 +511,6 @@ const PortfolioDragDrop = () => {
                       </div>
                     </div>
                     
-                    {/* Portfolio content */}
                     <div className="p-8">
                       {sections.map((section) => (
                         <div key={section.id} className="mb-8">
@@ -517,7 +571,6 @@ const PortfolioDragDrop = () => {
                             </div>
                           )}
                           
-                          {/* Sample placeholders for other section types */}
                           {section.type === 'projects' && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {section.content.map((project: any, i: number) => (
