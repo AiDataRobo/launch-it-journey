@@ -6,11 +6,12 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, CheckCircle2, Copy, ExternalLink } from 'lucide-react';
+import { PortfolioData } from '@/types/portfolio';
 
 interface PublishPortfolioModalProps {
   isOpen: boolean;
   onClose: () => void;
-  portfolioData: any;
+  portfolioData: PortfolioData;
 }
 
 const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfolioModalProps) => {
@@ -96,11 +97,11 @@ const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfo
       if (error) throw error;
       
       setIsPublished(true);
-      setPortfolioUrl(`https://jobonboard.com/portfolio/${username}`);
+      setPortfolioUrl(`${window.location.origin}/portfolio/${username}`);
       
       toast({
         title: "Portfolio published!",
-        description: `Your portfolio is now live at jobonboard.com/portfolio/${username}`,
+        description: `Your portfolio is now live at ${window.location.origin}/portfolio/${username}`,
       });
     } catch (error) {
       console.error('Error publishing portfolio:', error);

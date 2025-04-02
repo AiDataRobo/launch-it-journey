@@ -30,6 +30,33 @@ export type Database = {
         }
         Relationships: []
       }
+      published_portfolios: {
+        Row: {
+          id: string
+          portfolio_data: Json
+          published_at: string
+          updated_at: string
+          user_id: string
+          username: string
+        }
+        Insert: {
+          id?: string
+          portfolio_data: Json
+          published_at?: string
+          updated_at?: string
+          user_id: string
+          username: string
+        }
+        Update: {
+          id?: string
+          portfolio_data?: Json
+          published_at?: string
+          updated_at?: string
+          user_id?: string
+          username?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
