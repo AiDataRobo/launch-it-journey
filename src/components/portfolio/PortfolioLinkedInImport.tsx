@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { AlertCircle, ArrowRight, Linkedin, Upload, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
+import { PortfolioData, PortfolioSection } from '@/types/portfolio';
+import PublishPortfolioModal from './PublishPortfolioModal';
 
 interface PortfolioLinkedInImportProps {
   onStartFromScratch: () => void;
@@ -14,6 +17,8 @@ const PortfolioLinkedInImport: React.FC<PortfolioLinkedInImportProps> = ({ onSta
   const [isImporting, setIsImporting] = useState(false);
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [importStep, setImportStep] = useState(0);
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioData | null>(null);
   const { toast } = useToast();
 
   const handleImport = () => {
@@ -55,19 +60,127 @@ const PortfolioLinkedInImport: React.FC<PortfolioLinkedInImportProps> = ({ onSta
         });
       } else {
         clearInterval(processInterval);
-        // Complete the import
+        // Complete the import and generate portfolio data
         setTimeout(() => {
           setIsImporting(false);
           setImportStep(0);
+          
+          // Generate sample portfolio data based on LinkedIn import
+          const portfolioData = generatePortfolioFromLinkedIn();
+          setGeneratedPortfolio(portfolioData);
+          
           toast({
             title: "Import completed!",
-            description: "Your LinkedIn data has been successfully imported. Now you can customize your portfolio.",
+            description: "Your LinkedIn data has been successfully imported. You can now publish your portfolio.",
             variant: "default",
           });
-          // Here you'd redirect to the editor with the imported data
+          
+          // Open the publish modal automatically
+          setIsPublishModalOpen(true);
         }, 1500);
       }
     }, 1500);
+  };
+
+  // Generate portfolio data from LinkedIn (simulated)
+  const generatePortfolioFromLinkedIn = (): PortfolioData => {
+    // In a real implementation, this would use actual data from LinkedIn API
+    // For now, we'll create a sample portfolio with mock data
+    
+    const sections: PortfolioSection[] = [
+      {
+        id: 'about-1',
+        type: 'about',
+        title: 'About Me',
+        content: {
+          description: 'Passionate software developer with expertise in frontend technologies and a strong focus on creating user-friendly applications.'
+        }
+      },
+      {
+        id: 'experience-1',
+        type: 'experience',
+        title: 'Work Experience',
+        content: [
+          {
+            title: 'Senior Frontend Developer',
+            company: 'Tech Solutions Inc.',
+            period: '2020 - Present',
+            description: 'Lead developer on multiple high-profile projects, specializing in React and TypeScript.'
+          },
+          {
+            title: 'Web Developer',
+            company: 'Digital Innovations',
+            period: '2018 - 2020',
+            description: 'Developed and maintained responsive web applications using modern JavaScript frameworks.'
+          }
+        ]
+      },
+      {
+        id: 'education-1',
+        type: 'education',
+        title: 'Education',
+        content: [
+          {
+            degree: 'Master of Computer Science',
+            institution: 'Tech University',
+            year: '2016 - 2018'
+          },
+          {
+            degree: 'Bachelor of Computer Science',
+            institution: 'State University',
+            year: '2012 - 2016'
+          }
+        ]
+      },
+      {
+        id: 'skills-1',
+        type: 'skills',
+        title: 'Skills',
+        content: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'HTML/CSS', 'Git', 'UI/UX Design', 'RESTful APIs']
+      },
+      {
+        id: 'projects-1',
+        type: 'projects',
+        title: 'Projects',
+        content: [
+          {
+            title: 'E-commerce Platform',
+            description: 'Developed a full-stack e-commerce platform with React, Node.js, and MongoDB.',
+            link: 'https://github.com/example/ecommerce'
+          },
+          {
+            title: 'Portfolio Generator',
+            description: 'Created a tool for developers to generate and customize portfolio websites.',
+            link: 'https://github.com/example/portfolio-gen'
+          }
+        ]
+      },
+      {
+        id: 'contact-1',
+        type: 'contact',
+        title: 'Contact',
+        content: {
+          email: 'user@example.com',
+          phone: '(123) 456-7890',
+          location: 'San Francisco, CA'
+        }
+      }
+    ];
+    
+    return {
+      sections,
+      template: 'modern',
+      colors: {
+        primary: '#8B5CF6',
+        secondary: '#10B981',
+        background: '#ffffff',
+        text: '#333333'
+      },
+      meta: {
+        title: 'Professional Portfolio',
+        createdAt: new Date().toISOString()
+      }
+    };
   };
 
   return (
@@ -157,6 +270,15 @@ const PortfolioLinkedInImport: React.FC<PortfolioLinkedInImportProps> = ({ onSta
             </Button>
           </div>
         </div>
+      )}
+
+      {/* Publish portfolio modal that opens automatically after LinkedIn import */}
+      {generatedPortfolio && (
+        <PublishPortfolioModal 
+          isOpen={isPublishModalOpen}
+          onClose={() => setIsPublishModalOpen(false)}
+          portfolioData={generatedPortfolio}
+        />
       )}
     </div>
   );
