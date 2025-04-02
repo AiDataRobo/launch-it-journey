@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +11,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Mail } from '@/components/portfolio/Mail';
 import { MapPin } from '@/components/portfolio/MapPin';
+import PublishPortfolioModal from './PublishPortfolioModal';
 
 type SectionType = {
   id: string;
@@ -45,6 +45,7 @@ const PortfolioDragDrop = () => {
     background: '#ffffff',
     text: '#333333'
   });
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const draggedItemRef = useRef<number | null>(null);
   const { toast } = useToast();
 
@@ -164,11 +165,17 @@ const PortfolioDragDrop = () => {
   };
 
   const handlePublish = () => {
-    toast({
-      title: "Portfolio Published!",
-      description: "Your portfolio is now live at username.jobonboard.com",
-      variant: "default",
-    });
+    const portfolioData = {
+      sections,
+      template: currentTemplate,
+      colors,
+      meta: {
+        title: "John Doe's Portfolio",
+        createdAt: new Date().toISOString(),
+      }
+    };
+    
+    setIsPublishModalOpen(true);
   };
 
   return (
@@ -633,6 +640,16 @@ const PortfolioDragDrop = () => {
           </Tabs>
         </div>
       </div>
+
+      <PublishPortfolioModal 
+        isOpen={isPublishModalOpen}
+        onClose={() => setIsPublishModalOpen(false)}
+        portfolioData={{
+          sections,
+          template: currentTemplate,
+          colors,
+        }}
+      />
     </div>
   );
 };

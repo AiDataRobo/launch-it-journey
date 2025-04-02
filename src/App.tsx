@@ -17,6 +17,7 @@ import Products from "./pages/Products";
 import Dashboard from "./pages/Dashboard";
 import LinkedInOptimization from "./pages/LinkedInOptimization";
 import PortfolioGenerator from "./pages/PortfolioGenerator";
+import PublishedPortfolio from "./pages/PublishedPortfolio";
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/products" element={<Products />} />
             <Route path="/linkedin-optimization" element={<LinkedInOptimization />} />
             <Route path="/portfolio-generator" element={<PortfolioGenerator />} />
+            <Route path="/portfolio/:username" element={<PublishedPortfolio />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
