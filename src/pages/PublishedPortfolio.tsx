@@ -32,7 +32,12 @@ const PublishedPortfolio = () => {
         if (!data) {
           setError('Portfolio not found');
         } else {
-          setPortfolio(data as PublishedPortfolioType);
+          // Type assertion for the portfolio data from Json to our type
+          const typedData = {
+            ...data,
+            portfolio_data: data.portfolio_data as unknown as PublishedPortfolioType["portfolio_data"]
+          };
+          setPortfolio(typedData);
         }
       } catch (err) {
         console.error('Error fetching portfolio:', err);

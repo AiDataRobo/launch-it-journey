@@ -82,13 +82,13 @@ const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfo
         return;
       }
 
-      // Save portfolio data
+      // Save portfolio data - using type assertion to convert PortfolioData to Json
       const { data, error } = await supabase
         .from('published_portfolios')
         .upsert({
           user_id: userData.user.id,
           username: username.trim(),
-          portfolio_data: portfolioData,
+          portfolio_data: portfolioData as any, // Type assertion to bypass type check
           published_at: new Date().toISOString(),
         })
         .select()
