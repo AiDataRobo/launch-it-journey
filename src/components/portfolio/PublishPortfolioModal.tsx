@@ -56,6 +56,46 @@ const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfo
     checkUsernameAvailability(newUsername);
   };
 
+  // This function sanitizes the portfolio data to remove any circular structures
+  const sanitizePortfolioData = (data: PortfolioData): PortfolioData => {
+    // Create a deep copy of the data using JSON to strip any non-serializable content
+    try {
+      // First convert sections to a safe format
+      const sanitizedSections = data.sections.map(section => {
+        // Remove any React nodes or DOM elements from the section
+        const { icon, isEditing, ...restSection } = section;
+        
+        // Return a clean section object
+        return {
+          ...restSection,
+          // Remove any potential circular references or DOM nodes from content
+          content: JSON.parse(JSON.stringify(restSection.content))
+        };
+      });
+      
+      // Return a sanitized copy of the portfolio data
+      return {
+        sections: sanitizedSections,
+        template: data.template,
+        colors: data.colors,
+        meta: data.meta
+      };
+    } catch (error) {
+      console.error('Error sanitizing portfolio data:', error);
+      // Return a minimal valid structure if sanitization fails
+      return {
+        sections: [],
+        template: data.template || 'modern',
+        colors: data.colors || {
+          primary: '#000000',
+          secondary: '#000000',
+          background: '#ffffff',
+          text: '#000000'
+        }
+      };
+    }
+  };
+
   const handlePublish = async () => {
     if (!isUsernameAvailable || !username.trim()) {
       toast({
@@ -82,13 +122,16 @@ const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfo
         return;
       }
 
-      // Save portfolio data - using type assertion to convert PortfolioData to Json
+      // Sanitize portfolio data to prevent circular structure errors
+      const sanitizedData = sanitizePortfolioData(portfolioData);
+
+      // Save portfolio data - using sanitized data that's safe to store as JSON
       const { data, error } = await supabase
         .from('published_portfolios')
         .upsert({
           user_id: userData.user.id,
           username: username.trim(),
-          portfolio_data: portfolioData as any, // Type assertion to bypass type check
+          portfolio_data: sanitizedData as any, // Type assertion to bypass type check
           published_at: new Date().toISOString(),
         })
         .select()
