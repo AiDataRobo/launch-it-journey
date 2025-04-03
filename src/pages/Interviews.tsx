@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -54,7 +55,9 @@ const Interviews = () => {
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold mb-3">12</p>
-              <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90">Practice Now</Button>
+              <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90" asChild>
+                <Link to="/interviews/practice">Practice Now</Link>
+              </Button>
             </CardContent>
           </Card>
         </div>
@@ -101,8 +104,12 @@ const Interviews = () => {
                           </div>
                         </div>
                         <div className="flex items-center justify-end gap-2">
-                          <Button variant="outline">Prepare</Button>
-                          <Button className="bg-jobonboard-purple hover:bg-jobonboard-purple/90">Join</Button>
+                          <Button variant="outline" asChild>
+                            <Link to="/interviews/prepare/frontend-dev">Prepare</Link>
+                          </Button>
+                          <Button className="bg-jobonboard-purple hover:bg-jobonboard-purple/90" asChild>
+                            <Link to="https://zoom.us/join" target="_blank" rel="noopener noreferrer">Join</Link>
+                          </Button>
                         </div>
                       </div>
                     </CardContent>
@@ -134,7 +141,9 @@ const Interviews = () => {
                           </div>
                         </div>
                         <div className="flex items-center justify-end gap-2">
-                          <Button variant="outline">Prepare</Button>
+                          <Button variant="outline" asChild>
+                            <Link to="/interviews/prepare/ux-designer">Prepare</Link>
+                          </Button>
                           <Button variant="outline" disabled>Join</Button>
                         </div>
                       </div>
@@ -143,7 +152,9 @@ const Interviews = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">Schedule Mock Interview</Button>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link to="/interviews/schedule">Schedule Mock Interview</Link>
+                </Button>
               </CardFooter>
             </Card>
           </TabsContent>
@@ -168,8 +179,10 @@ const Interviews = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90">
-                    <PlayCircle className="mr-2 h-4 w-4" /> Continue Practice
+                  <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90" asChild>
+                    <Link to="/interviews/practice/technical">
+                      <PlayCircle className="mr-2 h-4 w-4" /> Continue Practice
+                    </Link>
                   </Button>
                 </CardFooter>
               </Card>
@@ -192,8 +205,10 @@ const Interviews = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90">
-                    <PlayCircle className="mr-2 h-4 w-4" /> Continue Practice
+                  <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90" asChild>
+                    <Link to="/interviews/practice/behavioral">
+                      <PlayCircle className="mr-2 h-4 w-4" /> Continue Practice
+                    </Link>
                   </Button>
                 </CardFooter>
               </Card>
@@ -216,8 +231,10 @@ const Interviews = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90">
-                    <PlayCircle className="mr-2 h-4 w-4" /> Start Mock Interview
+                  <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90" asChild>
+                    <Link to="/interviews/mock">
+                      <PlayCircle className="mr-2 h-4 w-4" /> Start Mock Interview
+                    </Link>
                   </Button>
                 </CardFooter>
               </Card>
@@ -233,11 +250,11 @@ const Interviews = () => {
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { company: 'Tech Solutions Inc.', position: 'Senior Developer', date: 'June 10, 2023', status: 'Successful', statusColor: 'bg-green-500' },
-                    { company: 'Digital Innovators', position: 'UI Developer', date: 'May 25, 2023', status: 'Pending', statusColor: 'bg-amber-500' },
-                    { company: 'WebSoft Technologies', position: 'Frontend Engineer', date: 'May 12, 2023', status: 'Successful', statusColor: 'bg-green-500' },
-                    { company: 'Creative Digital', position: 'UX Developer', date: 'April 30, 2023', status: 'Unsuccessful', statusColor: 'bg-red-500' },
-                    { company: 'TechGiant Corp', position: 'Software Engineer', date: 'April 15, 2023', status: 'Successful', statusColor: 'bg-green-500' },
+                    { company: 'Tech Solutions Inc.', position: 'Senior Developer', date: 'June 10, 2023', status: 'Successful', statusColor: 'bg-green-500', id: 'tech-solutions' },
+                    { company: 'Digital Innovators', position: 'UI Developer', date: 'May 25, 2023', status: 'Pending', statusColor: 'bg-amber-500', id: 'digital-innovators' },
+                    { company: 'WebSoft Technologies', position: 'Frontend Engineer', date: 'May 12, 2023', status: 'Successful', statusColor: 'bg-green-500', id: 'websoft' },
+                    { company: 'Creative Digital', position: 'UX Developer', date: 'April 30, 2023', status: 'Unsuccessful', statusColor: 'bg-red-500', id: 'creative-digital' },
+                    { company: 'TechGiant Corp', position: 'Software Engineer', date: 'April 15, 2023', status: 'Successful', statusColor: 'bg-green-500', id: 'techgiant' },
                   ].map((interview, index) => (
                     <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center gap-3">
@@ -259,7 +276,9 @@ const Interviews = () => {
                           {interview.status}
                         </Badge>
                       </div>
-                      <Button variant="outline" size="sm">View Details</Button>
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to={`/interviews/history/${interview.id}`}>View Details</Link>
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -283,7 +302,9 @@ const Interviews = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full">View All Tips</Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link to="/interviews/resources/tips">View All Tips</Link>
+                  </Button>
                 </CardFooter>
               </Card>
               
@@ -293,31 +314,33 @@ const Interviews = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="flex gap-3">
+                    <Link to="/interviews/resources/videos/technical-masterclass" className="flex gap-3 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       <Video className="h-10 w-10 text-jobonboard-purple" />
                       <div>
                         <h4 className="font-medium">Technical Interview Masterclass</h4>
                         <p className="text-sm text-gray-500">45 min • Beginner friendly</p>
                       </div>
-                    </div>
-                    <div className="flex gap-3">
+                    </Link>
+                    <Link to="/interviews/resources/videos/behavioral-questions" className="flex gap-3 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       <Video className="h-10 w-10 text-jobonboard-purple" />
                       <div>
                         <h4 className="font-medium">Answering Behavioral Questions</h4>
                         <p className="text-sm text-gray-500">30 min • All levels</p>
                       </div>
-                    </div>
-                    <div className="flex gap-3">
+                    </Link>
+                    <Link to="/interviews/resources/videos/whiteboard-strategies" className="flex gap-3 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       <Video className="h-10 w-10 text-jobonboard-purple" />
                       <div>
                         <h4 className="font-medium">Whiteboard Interview Strategies</h4>
                         <p className="text-sm text-gray-500">60 min • Intermediate</p>
                       </div>
-                    </div>
+                    </Link>
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full">Browse Library</Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link to="/interviews/resources/videos">Browse Library</Link>
+                  </Button>
                 </CardFooter>
               </Card>
               
@@ -327,31 +350,33 @@ const Interviews = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="flex gap-3">
+                    <Link to="/interviews/community/forum" className="flex gap-3 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       <MessageSquare className="h-10 w-10 text-jobonboard-purple" />
                       <div>
                         <h4 className="font-medium">Interview Preparation Forum</h4>
                         <p className="text-sm text-gray-500">Connect with peers preparing for interviews</p>
                       </div>
-                    </div>
-                    <div className="flex gap-3">
+                    </Link>
+                    <Link to="/interviews/community/mock-group" className="flex gap-3 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       <Users className="h-10 w-10 text-jobonboard-purple" />
                       <div>
                         <h4 className="font-medium">Mock Interview Group</h4>
                         <p className="text-sm text-gray-500">Practice with other job seekers</p>
                       </div>
-                    </div>
-                    <div className="flex gap-3">
+                    </Link>
+                    <Link to="/interviews/community/faqs" className="flex gap-3 hover:bg-gray-50 p-2 rounded-md transition-colors">
                       <AlertCircle className="h-10 w-10 text-jobonboard-purple" />
                       <div>
                         <h4 className="font-medium">Interview FAQs</h4>
                         <p className="text-sm text-gray-500">Answers to common questions</p>
                       </div>
-                    </div>
+                    </Link>
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button variant="outline" className="w-full">Join Community</Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link to="/interviews/community">Join Community</Link>
+                  </Button>
                 </CardFooter>
               </Card>
             </div>
