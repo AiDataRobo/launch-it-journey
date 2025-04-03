@@ -57,19 +57,33 @@ const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfo
   };
 
   // This function sanitizes the portfolio data to remove any circular structures
-  const sanitizePortfolioData = (data: PortfolioData): PortfolioData => {
-    // Create a deep copy of the data using JSON to strip any non-serializable content
+  const sanitizePortfolioData = (data: PortfolioData): any => {
     try {
-      // First convert sections to a safe format
+      // Create a safe copy by removing any potential circular references
       const sanitizedSections = data.sections.map(section => {
-        // Remove any React nodes or DOM elements from the section
-        const { icon, isEditing, ...restSection } = section;
+        // Extract only the data we need, removing React nodes and DOM elements
+        const { id, type, title, content } = section;
+        
+        // Create a clean content object based on section type
+        let sanitizedContent;
+        
+        if (Array.isArray(content)) {
+          // For array-based content (like skills, experience, education, projects)
+          sanitizedContent = JSON.parse(JSON.stringify(content));
+        } else if (typeof content === 'object' && content !== null) {
+          // For object-based content (like about, contact)
+          sanitizedContent = JSON.parse(JSON.stringify(content));
+        } else {
+          // For primitive content
+          sanitizedContent = content;
+        }
         
         // Return a clean section object
         return {
-          ...restSection,
-          // Remove any potential circular references or DOM nodes from content
-          content: JSON.parse(JSON.stringify(restSection.content))
+          id,
+          type,
+          title,
+          content: sanitizedContent
         };
       });
       
@@ -78,7 +92,10 @@ const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfo
         sections: sanitizedSections,
         template: data.template,
         colors: data.colors,
-        meta: data.meta
+        meta: data.meta || { 
+          title: "My Portfolio", 
+          createdAt: new Date().toISOString() 
+        }
       };
     } catch (error) {
       console.error('Error sanitizing portfolio data:', error);
@@ -87,10 +104,14 @@ const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfo
         sections: [],
         template: data.template || 'modern',
         colors: data.colors || {
-          primary: '#000000',
-          secondary: '#000000',
+          primary: '#8B5CF6',
+          secondary: '#10B981',
           background: '#ffffff',
-          text: '#000000'
+          text: '#333333'
+        },
+        meta: {
+          title: "My Portfolio",
+          createdAt: new Date().toISOString()
         }
       };
     }
@@ -119,25 +140,29 @@ const PublishPortfolioModal = ({ isOpen, onClose, portfolioData }: PublishPortfo
           description: "Please sign in to publish your portfolio.",
           variant: "destructive",
         });
+        setIsPublishing(false);
         return;
       }
 
       // Sanitize portfolio data to prevent circular structure errors
       const sanitizedData = sanitizePortfolioData(portfolioData);
 
-      // Save portfolio data - using sanitized data that's safe to store as JSON
+      // Save portfolio data - using type assertion to bypass type check
       const { data, error } = await supabase
         .from('published_portfolios')
         .upsert({
           user_id: userData.user.id,
           username: username.trim(),
-          portfolio_data: sanitizedData as any, // Type assertion to bypass type check
+          portfolio_data: sanitizedData,
           published_at: new Date().toISOString(),
         })
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
       
       setIsPublished(true);
       setPortfolioUrl(`${window.location.origin}/portfolio/${username}`);
