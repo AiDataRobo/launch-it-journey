@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { PortfolioData, PortfolioSection } from '@/types/portfolio';
 import PublishPortfolioModal from './PublishPortfolioModal';
+import { supabase } from "@/integrations/supabase/client";
 
 interface PortfolioLinkedInImportProps {
   onStartFromScratch: () => void;
@@ -21,7 +22,7 @@ const PortfolioLinkedInImport: React.FC<PortfolioLinkedInImportProps> = ({ onSta
   const [generatedPortfolio, setGeneratedPortfolio] = useState<PortfolioData | null>(null);
   const { toast } = useToast();
 
-  const handleImport = () => {
+  const handleImport = async () => {
     if (!linkedinUrl) {
       toast({
         title: "LinkedIn URL required",
@@ -31,58 +32,102 @@ const PortfolioLinkedInImport: React.FC<PortfolioLinkedInImportProps> = ({ onSta
       return;
     }
 
-    // Simulate the import process with steps
+    // Validate the LinkedIn URL format
+    if (!linkedinUrl.includes('linkedin.com/in/')) {
+      toast({
+        title: "Invalid LinkedIn URL",
+        description: "Please enter a valid LinkedIn profile URL (e.g., https://www.linkedin.com/in/username).",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsImporting(true);
-    simulateImportProcess();
-  };
-
-  const simulateImportProcess = () => {
-    // For demo purpose, we'll simulate a multi-step import process
-    const steps = [
-      "Connecting to LinkedIn...",
-      "Fetching profile data...",
-      "Analyzing work experience...",
-      "Extracting skills...",
-      "Generating portfolio draft...",
-      "Complete!"
-    ];
-
+    setImportStep(0);
+    
+    // Start the import process with UI feedback
+    toast({
+      title: "Starting LinkedIn Import",
+      description: "Connecting to LinkedIn...",
+    });
+    
+    // Progress through UI steps while the actual scraping happens
+    const totalSteps = 5;
     let currentStep = 0;
     
-    const processInterval = setInterval(() => {
-      if (currentStep < steps.length - 1) {
+    const stepInterval = setInterval(() => {
+      if (currentStep < totalSteps - 1) {
         currentStep++;
         setImportStep(currentStep);
         
+        const stepMessages = [
+          "Connecting to LinkedIn...",
+          "Fetching profile data...",
+          "Analyzing work experience...",
+          "Extracting skills...",
+          "Generating portfolio draft..."
+        ];
+        
         toast({
-          title: steps[currentStep],
-          description: `Step ${currentStep + 1} of ${steps.length}`,
+          title: stepMessages[currentStep],
+          description: `Step ${currentStep + 1} of ${totalSteps}`,
         });
       } else {
-        clearInterval(processInterval);
-        // Complete the import and generate portfolio data
-        setTimeout(() => {
-          setIsImporting(false);
-          setImportStep(0);
-          
-          // Generate sample portfolio data based on LinkedIn import
-          const portfolioData = generatePortfolioFromLinkedIn();
-          setGeneratedPortfolio(portfolioData);
-          
-          toast({
-            title: "Import completed!",
-            description: "Your LinkedIn data has been successfully imported. You can now publish your portfolio.",
-            variant: "default",
-          });
-          
-          // Open the publish modal automatically
-          setIsPublishModalOpen(true);
-        }, 1500);
+        clearInterval(stepInterval);
       }
     }, 1500);
+    
+    try {
+      // Call the Supabase Edge Function to scrape the LinkedIn profile
+      const { data, error } = await supabase.functions.invoke('linkedin-scraper', {
+        body: { linkedinUrl },
+      });
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      // Clear the interval once we have real data
+      clearInterval(stepInterval);
+      
+      if (data.success && data.data) {
+        setGeneratedPortfolio(data.data);
+        
+        toast({
+          title: "Import completed!",
+          description: "Your LinkedIn data has been successfully imported. You can now publish your portfolio.",
+          variant: "default",
+        });
+        
+        // Open the publish modal automatically
+        setIsPublishModalOpen(true);
+      } else {
+        throw new Error("Failed to extract data from LinkedIn profile");
+      }
+    } catch (error) {
+      clearInterval(stepInterval);
+      console.error("LinkedIn import error:", error);
+      
+      // Fallback to generating sample data when real scraping fails
+      toast({
+        title: "Automatic import failed",
+        description: "Using sample data instead. In a production environment, LinkedIn scraping requires authentication.",
+        variant: "destructive",
+      });
+      
+      // Generate fallback sample data
+      const portfolioData = generatePortfolioFromLinkedIn();
+      setGeneratedPortfolio(portfolioData);
+      
+      // Still show the publish modal with sample data
+      setIsPublishModalOpen(true);
+    } finally {
+      setIsImporting(false);
+      setImportStep(0);
+    }
   };
 
-  // Generate portfolio data from LinkedIn (simulated)
+  // Generate portfolio data from LinkedIn (fallback with sample data)
   const generatePortfolioFromLinkedIn = (): PortfolioData => {
     // In a real implementation, this would use actual data from LinkedIn API
     // For now, we'll create a sample portfolio with mock data
@@ -171,7 +216,7 @@ const PortfolioLinkedInImport: React.FC<PortfolioLinkedInImportProps> = ({ onSta
       sections,
       template: 'modern',
       colors: {
-        primary: '#8B5CF6',
+        primary: '#0A66C2', // LinkedIn blue
         secondary: '#10B981',
         background: '#ffffff',
         text: '#333333'
@@ -200,7 +245,7 @@ const PortfolioLinkedInImport: React.FC<PortfolioLinkedInImportProps> = ({ onSta
             <motion.div 
               className="bg-jobonboard-purple h-2.5 rounded-full"
               initial={{ width: "0%" }}
-              animate={{ width: `${(importStep / 5) * 100}%` }}
+              animate={{ width: `${(importStep / 4) * 100}%` }}
               transition={{ duration: 0.5 }}
             />
           </div>

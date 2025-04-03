@@ -1,1 +1,52 @@
+
+# Project ID from the Supabase dashboard
 project_id = "hidjuathfyiogrnxxxfh"
+
+[api]
+# Port to use for the API URL
+port = 54321
+schemes = ["http", "https"]
+
+[db]
+# Port to use for the local database URL
+port = 54322
+
+[studio]
+# Port to use for Supabase Studio
+port = 54323
+
+# Email testing
+[inbucket]
+# Port for the landing page
+port = 54324
+smtp_port = 54325
+pop3_port = 54326
+
+[functions.linkedin-scraper]
+verify_jwt = true
+
+[auth]
+# The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
+# in emails.
+site_url = "http://localhost:3000"
+# A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
+additional_redirect_urls = ["https://localhost:3000"]
+# How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 seconds (1 week).
+jwt_expiry = 3600
+# Allow/disallow new user signups to your project.
+enable_signup = true
+
+[auth.email]
+# Allow/disallow new user signups via email to your project.
+enable_signup = true
+# If enabled, a user will be required to confirm any email change on both the old, and new email
+# addresses. If disabled, only the new email is required to confirm.
+double_confirm_changes = true
+# If enabled, users need to confirm their email address before signing in.
+enable_confirmations = false
+
+[auth.sms]
+# Allow/disallow new user signups via SMS to your project.
+enable_signup = true
+# If enabled, users need to confirm their phone number before signing in.
+enable_confirmations = false
