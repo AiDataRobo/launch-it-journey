@@ -4,7 +4,7 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Calendar, Clock, Video, MessageSquare, CheckCircle, AlertCircle, PlayCircle } from 'lucide-react';
+import { BarChart3, Calendar, Clock, Video, MessageSquare, CheckCircle, AlertCircle, PlayCircle, Users } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 
