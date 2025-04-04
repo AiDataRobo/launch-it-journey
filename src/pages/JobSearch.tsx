@@ -103,7 +103,7 @@ const JobSearch = () => {
       salary: '$130,000 - $160,000',
       posted: '3 days ago',
       category: 'Web Development',
-      description: 'As a Full Stack Engineer at StartUp Innovations, you will build and maintain our core product features. You'll work across the entire stack, from database to frontend, delivering a seamless user experience.',
+      description: 'As a Full Stack Engineer at StartUp Innovations, you will build and maintain our core product features. You will work across the entire stack, from database to frontend, delivering a seamless user experience.',
       skills: ['Node.js', 'React', 'MongoDB'],
       featured: true,
       urgent: false,
