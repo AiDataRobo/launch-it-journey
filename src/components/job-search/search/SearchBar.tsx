@@ -65,7 +65,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 <SelectValue placeholder="Job Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="Web Development">Web Development</SelectItem>
                 <SelectItem value="Data Science">Data Science</SelectItem>
                 <SelectItem value="DevOps">DevOps</SelectItem>

@@ -45,7 +45,7 @@ const ViewToggle: React.FC<ViewToggleProps> = ({
         <Button variant="outline" onClick={resetFilters} className="text-sm">
           <Filter className="h-4 w-4 mr-1" /> Reset Filters
         </Button>
-        <Select>
+        <Select defaultValue="latest">
           <SelectTrigger className="w-[150px]">
             <SelectValue placeholder="Sort by: Latest" />
           </SelectTrigger>
