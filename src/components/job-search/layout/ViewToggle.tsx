@@ -47,7 +47,7 @@ const ViewToggle: React.FC<ViewToggleProps> = ({
         </Button>
         <Select defaultValue="latest">
           <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Sort by: Latest" />
+            <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="latest">Latest</SelectItem>

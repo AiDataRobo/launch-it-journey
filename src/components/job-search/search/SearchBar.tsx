@@ -60,7 +60,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               />
               <label htmlFor="remote-only" className="text-sm md:text-base">Remote only</label>
             </div>
-            <Select value={category} onValueChange={setCategory}>
+            <Select value={category} onValueChange={setCategory} defaultValue="all">
               <SelectTrigger className="w-full md:w-[180px] bg-white/80 text-gray-800">
                 <SelectValue placeholder="Job Category" />
               </SelectTrigger>
