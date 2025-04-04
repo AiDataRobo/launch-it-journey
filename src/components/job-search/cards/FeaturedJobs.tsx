@@ -4,8 +4,8 @@ import { Building, MapPin, Clock, Heart } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { JobListing } from './jobListingsData';
-import { companyLogos } from './companyLogos';
+import { JobListing } from '../data/jobListingsData';
+import { companyLogos } from '../data/companyLogos';
 
 interface FeaturedJobsProps {
   jobs: JobListing[];

@@ -5,8 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { JobListing } from './jobListingsData';
-import { companyLogos } from './companyLogos';
+import { JobListing } from '../data/jobListingsData';
+import { companyLogos } from '../data/companyLogos';
 
 interface JobCardProps {
   job: JobListing;

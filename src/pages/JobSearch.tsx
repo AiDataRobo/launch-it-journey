@@ -4,12 +4,12 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { useToast } from "@/hooks/use-toast";
 
 // Import job search components
-import { allJobListings } from '@/components/job-search/jobListingsData';
-import SearchBar from '@/components/job-search/SearchBar';
-import ViewToggle from '@/components/job-search/ViewToggle';
-import FeaturedJobs from '@/components/job-search/FeaturedJobs';
-import FiltersSidebar from '@/components/job-search/FiltersSidebar';
-import JobList from '@/components/job-search/JobList';
+import { allJobListings } from '@/components/job-search/data/jobListingsData';
+import SearchBar from '@/components/job-search/search/SearchBar';
+import ViewToggle from '@/components/job-search/layout/ViewToggle';
+import FeaturedJobs from '@/components/job-search/cards/FeaturedJobs';
+import FiltersSidebar from '@/components/job-search/filters/FiltersSidebar';
+import JobList from '@/components/job-search/cards/JobList';
 
 const JobSearch = () => {
   const { toast } = useToast();
