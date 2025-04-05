@@ -57,7 +57,7 @@ const ApplicationKanban: React.FC<ApplicationKanbanProps> = ({
                         </div>
                         {app.logo && (
                           <img 
-                            src={app.logo as string} 
+                            src={app.logo} 
                             alt={app.company} 
                             className="h-8 w-8 rounded object-cover border"
                           />

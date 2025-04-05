@@ -1,6 +1,4 @@
 
-import { StaticImageData } from "next/image";
-
 export interface ApplicationData {
   id: number;
   jobTitle: string;
@@ -8,7 +6,7 @@ export interface ApplicationData {
   status: string;
   appliedDate: string;
   notes: string;
-  logo?: string | StaticImageData;
+  logo?: string;
   location?: string;
   salary?: string;
   nextStep?: string;

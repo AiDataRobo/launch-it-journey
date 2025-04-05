@@ -2,6 +2,18 @@
 import { ApplicationData } from '../types';
 import { companyLogos } from '../../job-search/data/companyLogos';
 
+// Create placeholder logos for companies not in companyLogos
+const placeholderLogos = {
+  "Google": "https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80",
+  "Apple": "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80",
+  "Microsoft": "https://images.unsplash.com/photo-1642132652806-8aa05081455c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80",
+  "Amazon": "https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80",
+  "Netflix": "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80",
+  "Meta": "https://images.unsplash.com/photo-1519337265831-281ec6cc8514?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80",
+  "Twitter": "https://images.unsplash.com/photo-1611605698335-8b1569810432?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80",
+  "Airbnb": "https://images.unsplash.com/photo-1580129958560-fefe3becbfd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&h=200&q=80"
+};
+
 export const initialApplications: ApplicationData[] = [
   {
     id: 1,
@@ -10,7 +22,7 @@ export const initialApplications: ApplicationData[] = [
     status: "Interview",
     appliedDate: "2025-03-20",
     notes: "Had a great phone screening. Technical interview scheduled for next week.",
-    logo: companyLogos.Google,
+    logo: placeholderLogos.Google,
     location: "Mountain View, CA (Remote)",
     salary: "$140,000 - $170,000",
     nextStep: "Technical Interview",
@@ -23,7 +35,7 @@ export const initialApplications: ApplicationData[] = [
     status: "Applied",
     appliedDate: "2025-03-28",
     notes: "Applied via company website. Waiting to hear back.",
-    logo: companyLogos.Apple,
+    logo: placeholderLogos.Apple,
     location: "Cupertino, CA",
     salary: "$120,000 - $150,000"
   },
@@ -34,7 +46,7 @@ export const initialApplications: ApplicationData[] = [
     status: "Rejected",
     appliedDate: "2025-03-15",
     notes: "Received rejection email. Position was filled internally.",
-    logo: companyLogos.Microsoft,
+    logo: placeholderLogos.Microsoft,
     location: "Redmond, WA (Hybrid)",
     salary: "$130,000 - $160,000"
   },
@@ -45,7 +57,7 @@ export const initialApplications: ApplicationData[] = [
     status: "Final Round",
     appliedDate: "2025-03-10",
     notes: "Completed 4 interviews. Final round with director scheduled.",
-    logo: companyLogos.Amazon,
+    logo: placeholderLogos.Amazon,
     location: "Seattle, WA",
     salary: "$145,000 - $175,000",
     nextStep: "Final Interview",
@@ -58,7 +70,7 @@ export const initialApplications: ApplicationData[] = [
     status: "Technical",
     appliedDate: "2025-03-22",
     notes: "Passed initial screening. Technical assessment sent via email.",
-    logo: companyLogos.Netflix,
+    logo: placeholderLogos.Netflix,
     location: "Los Gatos, CA (Remote)",
     salary: "$110,000 - $130,000",
     nextStep: "Submit Technical Assessment",
@@ -71,7 +83,7 @@ export const initialApplications: ApplicationData[] = [
     status: "Offer",
     appliedDate: "2025-02-28",
     notes: "Received offer! Negotiating salary and benefits.",
-    logo: companyLogos.Meta,
+    logo: placeholderLogos.Meta,
     location: "Menlo Park, CA (Hybrid)",
     salary: "$160,000 - $190,000",
     nextStep: "Respond to Offer",
@@ -84,7 +96,7 @@ export const initialApplications: ApplicationData[] = [
     status: "Screening",
     appliedDate: "2025-03-25",
     notes: "HR reached out to schedule initial screening call.",
-    logo: companyLogos.Twitter,
+    logo: placeholderLogos.Twitter,
     location: "San Francisco, CA",
     salary: "$90,000 - $110,000",
     nextStep: "Phone Screening",
@@ -97,7 +109,7 @@ export const initialApplications: ApplicationData[] = [
     status: "Withdrawn",
     appliedDate: "2025-03-05",
     notes: "Withdrew application after accepting another offer.",
-    logo: companyLogos.Airbnb,
+    logo: placeholderLogos.Airbnb,
     location: "San Francisco, CA (Remote)",
     salary: "$130,000 - $155,000"
   }
