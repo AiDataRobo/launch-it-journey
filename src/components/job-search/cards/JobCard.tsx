@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Building, MapPin, Clock, Heart } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -88,11 +89,11 @@ const JobCard: React.FC<JobCardProps> = ({ job, viewMode, savedJobs, handleSaveJ
               </div>
               
               <div className="mt-4 flex justify-between items-center">
-                <DialogTrigger asChild>
+                <Link to={`/job-details/${job.id}`}>
                   <Button variant="outline" size="sm">
                     View Details
                   </Button>
-                </DialogTrigger>
+                </Link>
                 <div className="flex space-x-2">
                   <Button 
                     variant="outline" 
@@ -116,6 +117,12 @@ const JobCard: React.FC<JobCardProps> = ({ job, viewMode, savedJobs, handleSaveJ
                   </Button>
                 </div>
               </div>
+              
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="hidden">
+                  View Details
+                </Button>
+              </DialogTrigger>
               
               <DialogContent className="max-w-3xl">
                 <DialogHeader>
@@ -186,12 +193,11 @@ const JobCard: React.FC<JobCardProps> = ({ job, viewMode, savedJobs, handleSaveJ
                         </div>
                         
                         <div className="pt-4">
-                          <Button 
-                            className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90 mb-2"
-                            onClick={() => handleApply(job.id)}
-                          >
-                            Apply Now
-                          </Button>
+                          <Link to={`/job-details/${job.id}`} className="w-full">
+                            <Button className="w-full bg-jobonboard-purple hover:bg-jobonboard-purple/90 mb-2">
+                              View Full Details
+                            </Button>
+                          </Link>
                           <Button 
                             variant="outline" 
                             className="w-full" 
@@ -233,3 +239,4 @@ const JobCard: React.FC<JobCardProps> = ({ job, viewMode, savedJobs, handleSaveJ
 };
 
 export default JobCard;
+

@@ -20,6 +20,7 @@ import PortfolioGenerator from "./pages/PortfolioGenerator";
 import PublishedPortfolio from "./pages/PublishedPortfolio";
 import Network from "./pages/Network";
 import JobSearch from "./pages/JobSearch";
+import JobDetails from "./pages/JobDetails";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import Interviews from "./pages/Interviews";
 import { AuthProvider } from "./context/AuthContext";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/portfolio/:username" element={<PublishedPortfolio />} />
             <Route path="/network" element={<Network />} />
             <Route path="/job-search" element={<JobSearch />} />
+            <Route path="/job-details/:jobId" element={<JobDetails />} />
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/interviews" element={<Interviews />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
@@ -61,3 +63,4 @@ const App = () => (
 );
 
 export default App;
+
