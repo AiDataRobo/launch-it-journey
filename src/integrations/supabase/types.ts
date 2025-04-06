@@ -9,6 +9,71 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      job_referral_postings: {
+        Row: {
+          active: boolean
+          company: string
+          company_logo: string | null
+          created_at: string
+          description: string
+          id: string
+          job_type: string
+          location: string
+          posted_date: string
+          referral_count: number
+          referral_provider_id: string | null
+          requirements: string[]
+          tags: string[]
+          title: string
+          updated_at: string
+          urgency: string
+        }
+        Insert: {
+          active?: boolean
+          company: string
+          company_logo?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          job_type: string
+          location: string
+          posted_date?: string
+          referral_count?: number
+          referral_provider_id?: string | null
+          requirements?: string[]
+          tags?: string[]
+          title: string
+          updated_at?: string
+          urgency: string
+        }
+        Update: {
+          active?: boolean
+          company?: string
+          company_logo?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          job_type?: string
+          location?: string
+          posted_date?: string
+          referral_count?: number
+          referral_provider_id?: string | null
+          requirements?: string[]
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          urgency?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_referral_provider"
+            columns: ["referral_provider_id"]
+            isOneToOne: false
+            referencedRelation: "referral_providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -56,6 +121,96 @@ export type Database = {
           username?: string
         }
         Relationships: []
+      }
+      referral_providers: {
+        Row: {
+          company: string
+          created_at: string
+          id: string
+          job_title: string
+          max_active_referrals: number
+          user_id: string
+          verification_date: string | null
+          verified: boolean
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          id?: string
+          job_title: string
+          max_active_referrals?: number
+          user_id: string
+          verification_date?: string | null
+          verified?: boolean
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          id?: string
+          job_title?: string
+          max_active_referrals?: number
+          user_id?: string
+          verification_date?: string | null
+          verified?: boolean
+        }
+        Relationships: []
+      }
+      referral_requests: {
+        Row: {
+          expires_at: string
+          feedback: string | null
+          id: string
+          job_id: string | null
+          provider_id: string | null
+          reason: string
+          requested_at: string
+          requester_id: string
+          resume_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          expires_at?: string
+          feedback?: string | null
+          id?: string
+          job_id?: string | null
+          provider_id?: string | null
+          reason: string
+          requested_at?: string
+          requester_id: string
+          resume_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          expires_at?: string
+          feedback?: string | null
+          id?: string
+          job_id?: string | null
+          provider_id?: string | null
+          reason?: string
+          requested_at?: string
+          requester_id?: string
+          resume_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_requests_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "job_referral_postings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_requests_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "referral_providers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

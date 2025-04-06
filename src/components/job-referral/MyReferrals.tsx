@@ -18,12 +18,19 @@ import {
   MessageCircle,
   RefreshCcw 
 } from 'lucide-react';
-import { myReferrals } from './data/jobReferralData';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ReferralRequest } from '@/hooks/use-job-referrals';
+import { useAuth } from '@/context/AuthContext';
+import { Link } from 'react-router-dom';
 
-const MyReferrals = () => {
-  const [selectedReferral, setSelectedReferral] = useState<number | null>(null);
+interface MyReferralsProps {
+  referralRequests: ReferralRequest[];
+}
+
+const MyReferrals: React.FC<MyReferralsProps> = ({ referralRequests }) => {
+  const [selectedReferral, setSelectedReferral] = useState<string | null>(null);
+  const { user } = useAuth();
   
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -55,11 +62,25 @@ const MyReferrals = () => {
     }
   };
   
-  const viewReferralDetails = (id: number) => {
+  const viewReferralDetails = (id: string) => {
     setSelectedReferral(id);
   };
   
-  const selectedReferralData = myReferrals.find(r => r.id === selectedReferral);
+  const selectedReferralData = referralRequests.find(r => r.id === selectedReferral);
+  
+  if (!user) {
+    return (
+      <div className="flex h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+        <h3 className="text-lg font-medium">Authentication Required</h3>
+        <p className="text-sm text-gray-500">Please sign in to view your referral requests</p>
+        <Link to="/login">
+          <Button className="mt-4 bg-jobonboard-purple hover:bg-jobonboard-purple-light">
+            Sign In
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in">
@@ -75,7 +96,7 @@ const MyReferrals = () => {
         </Button>
       </div>
       
-      {myReferrals.length === 0 ? (
+      {referralRequests.length === 0 ? (
         <div className="flex h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
             <Clock className="h-6 w-6 text-gray-400" />
@@ -99,14 +120,14 @@ const MyReferrals = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {myReferrals.map((referral) => (
+              {referralRequests.map((referral) => (
                 <TableRow 
                   key={referral.id}
                   className="hover:bg-gray-50"
                 >
-                  <TableCell className="font-medium">{referral.jobTitle}</TableCell>
-                  <TableCell>{referral.company}</TableCell>
-                  <TableCell>{referral.requestedDate}</TableCell>
+                  <TableCell className="font-medium">{referral.job.title}</TableCell>
+                  <TableCell>{referral.job.company}</TableCell>
+                  <TableCell>{referral.requested_at}</TableCell>
                   <TableCell>
                     <div className="flex items-center">
                       <Badge variant="outline" className={getStatusClass(referral.status)}>
@@ -154,15 +175,15 @@ const MyReferrals = () => {
                   <div className="mb-4 grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs text-gray-500">Job Position</p>
-                      <p className="font-medium">{selectedReferralData.jobTitle}</p>
+                      <p className="font-medium">{selectedReferralData.job.title}</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Company</p>
-                      <p className="font-medium">{selectedReferralData.company}</p>
+                      <p className="font-medium">{selectedReferralData.job.company}</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Requested On</p>
-                      <p>{selectedReferralData.requestedDate}</p>
+                      <p>{selectedReferralData.requested_at}</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">Status</p>
@@ -177,14 +198,14 @@ const MyReferrals = () => {
                     </div>
                   </div>
                   
-                  {selectedReferralData.referrer && (
+                  {selectedReferralData.provider_name && (
                     <div className="mb-4 rounded border border-gray-200 p-3">
                       <p className="text-xs text-gray-500">Referrer</p>
                       <div className="mt-1 flex items-center">
                         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
-                          {selectedReferralData.referrer.charAt(0)}
+                          {selectedReferralData.provider_name.charAt(0)}
                         </div>
-                        <p className="ml-2 font-medium">{selectedReferralData.referrer}</p>
+                        <p className="ml-2 font-medium">{selectedReferralData.provider_name}</p>
                       </div>
                     </div>
                   )}
@@ -206,14 +227,16 @@ const MyReferrals = () => {
                   </div>
                 </div>
                 
-                <div className="flex justify-between">
-                  <p className="text-sm">
-                    <span className="font-medium">Resume:</span> resume_{selectedReferralData.id}.pdf
-                  </p>
-                  <Button variant="link" className="h-auto p-0 text-jobonboard-purple">
-                    Download
-                  </Button>
-                </div>
+                {selectedReferralData.resume_url && (
+                  <div className="flex justify-between">
+                    <p className="text-sm">
+                      <span className="font-medium">Resume:</span> {selectedReferralData.resume_url.split('/').pop()}
+                    </p>
+                    <Button variant="link" className="h-auto p-0 text-jobonboard-purple">
+                      Download
+                    </Button>
+                  </div>
+                )}
               </div>
               
               <div className="flex justify-end space-x-2">

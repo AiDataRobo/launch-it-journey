@@ -1,4 +1,3 @@
-
 export interface JobReferralListing {
   id: number;
   title: string;
@@ -25,7 +24,7 @@ export interface MyReferral {
   reason: string;
 }
 
-// Sample job listing data
+// Mock data for development/fallback purposes
 export const jobReferralListings: JobReferralListing[] = [
   {
     id: 1,
@@ -107,7 +106,7 @@ export const jobReferralListings: JobReferralListing[] = [
   }
 ];
 
-// Sample my referrals data
+// Mock data for development/fallback purposes
 export const myReferrals: MyReferral[] = [
   {
     id: 101,

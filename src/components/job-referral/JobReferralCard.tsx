@@ -4,11 +4,11 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, MapPin, Calendar, Users, ExternalLink } from 'lucide-react';
-import { JobReferralListing } from './data/jobReferralData';
+import { JobReferralPost } from '@/hooks/use-job-referrals';
 
 interface JobReferralCardProps {
-  job: JobReferralListing;
-  onRequestReferral: (jobId: number) => void;
+  job: JobReferralPost;
+  onRequestReferral: (jobId: string) => void;
 }
 
 const JobReferralCard: React.FC<JobReferralCardProps> = ({ job, onRequestReferral }) => {
@@ -17,8 +17,8 @@ const JobReferralCard: React.FC<JobReferralCardProps> = ({ job, onRequestReferra
       <CardContent className="p-5">
         <div className="mb-4 flex items-center">
           <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
-            {job.companyLogo ? (
-              <img src={job.companyLogo} alt={`${job.company} logo`} className="h-full w-full object-cover" />
+            {job.company_logo ? (
+              <img src={job.company_logo} alt={`${job.company} logo`} className="h-full w-full object-cover" />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-500">
                 {job.company.charAt(0)}
@@ -38,7 +38,7 @@ const JobReferralCard: React.FC<JobReferralCardProps> = ({ job, onRequestReferra
           </div>
           <div className="flex items-center text-gray-600">
             <Briefcase className="mr-2 h-4 w-4" />
-            {job.type}
+            {job.job_type}
           </div>
           <div className="flex items-center text-gray-600">
             <Calendar className="mr-2 h-4 w-4" />
@@ -46,7 +46,7 @@ const JobReferralCard: React.FC<JobReferralCardProps> = ({ job, onRequestReferra
           </div>
           <div className="flex items-center text-gray-600">
             <Users className="mr-2 h-4 w-4" />
-            {job.referralCount} referrals available
+            {job.referral_count} referrals available
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { 
   Dialog, 
@@ -22,10 +22,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { Upload, CheckCircle2 } from 'lucide-react';
-import { jobReferralListings } from './data/jobReferralData';
+import { useJobReferrals } from '@/hooks/use-job-referrals';
 
 interface ReferralRequestProps {
-  jobId: number;
+  jobId: string;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -37,9 +37,10 @@ type FormValues = {
 };
 
 const ReferralRequest: React.FC<ReferralRequestProps> = ({ jobId, isOpen, onClose }) => {
-  const job = jobReferralListings.find(j => j.id === jobId);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const { jobPostings, submitReferralRequest } = useJobReferrals();
+  const job = jobPostings.find(j => j.id === jobId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   
   const form = useForm<FormValues>({
     defaultValues: {
@@ -52,25 +53,39 @@ const ReferralRequest: React.FC<ReferralRequestProps> = ({ jobId, isOpen, onClos
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Form data:', data);
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    
-    toast({
-      title: "Referral Request Submitted",
-      description: "Your request has been sent successfully.",
-    });
-    
-    // Reset form after successful submission
-    setTimeout(() => {
-      setIsSubmitted(false);
-      form.reset();
-      onClose();
-    }, 2000);
+    try {
+      const resumeFile = data.resume && data.resume.length > 0 ? data.resume[0] : null;
+      const fullReason = data.additionalInfo 
+        ? `${data.reason}\n\nAdditional Information:\n${data.additionalInfo}`
+        : data.reason;
+
+      const result = await submitReferralRequest(jobId, fullReason, resumeFile);
+      
+      if (result) {
+        setIsSubmitted(true);
+        
+        toast({
+          title: "Referral Request Submitted",
+          description: "Your request has been sent successfully.",
+        });
+        
+        // Reset form after successful submission
+        setTimeout(() => {
+          setIsSubmitted(false);
+          form.reset();
+          onClose();
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error submitting request:', error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your request. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!job) return null;
