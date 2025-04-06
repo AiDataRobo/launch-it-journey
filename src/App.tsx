@@ -24,6 +24,7 @@ import JobDetails from "./pages/JobDetails";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import Interviews from "./pages/Interviews";
 import ApplicationTracker from "./pages/ApplicationTracker";
+import SkillAssessment from "./pages/SkillAssessment";
 import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/interviews" element={<Interviews />} />
             <Route path="/application-tracker" element={<ApplicationTracker />} />
+            <Route path="/skill-assessment" element={<SkillAssessment />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
