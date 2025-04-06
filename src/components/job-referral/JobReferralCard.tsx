@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, MapPin, Calendar, Users, ExternalLink } from 'lucide-react';
 import { JobReferralPost } from '@/hooks/use-job-referrals';
+import { formatDistanceToNow } from 'date-fns';
 
 interface JobReferralCardProps {
   job: JobReferralPost;
@@ -42,7 +42,7 @@ const JobReferralCard: React.FC<JobReferralCardProps> = ({ job, onRequestReferra
           </div>
           <div className="flex items-center text-gray-600">
             <Calendar className="mr-2 h-4 w-4" />
-            Posted {job.postedDate}
+            Posted {job.postedDate || formatDistanceToNow(new Date(job.posted_date), { addSuffix: true })}
           </div>
           <div className="flex items-center text-gray-600">
             <Users className="mr-2 h-4 w-4" />

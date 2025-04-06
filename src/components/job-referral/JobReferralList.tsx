@@ -10,6 +10,7 @@ import MyReferrals from './MyReferrals';
 import { useJobReferrals, JobReferralPost, ReferralRequest as ReferralRequestType } from '@/hooks/use-job-referrals';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from '@/hooks/use-toast';
+import { formatDistanceToNow } from 'date-fns';
 
 const JobReferralList = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,6 +49,11 @@ const JobReferralList = () => {
           setMyRequests(requests);
         } catch (err) {
           console.error('Failed to load user requests:', err);
+          toast({
+            title: "Error Loading Requests",
+            description: "Could not load your referral requests",
+            variant: "destructive"
+          });
         }
       }
     };

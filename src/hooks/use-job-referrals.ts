@@ -18,6 +18,7 @@ export interface JobReferralPost {
   referral_count: number;
   description: string;
   requirements: string[];
+  postedDate?: string; // For frontend display purposes
 }
 
 export interface ReferralRequest {
@@ -61,7 +62,7 @@ export function useJobReferrals() {
       const formattedData = data.map(job => ({
         ...job,
         postedDate: formatDistanceToNow(new Date(job.posted_date), { addSuffix: true }),
-      }));
+      })) as JobReferralPost[];
 
       setJobPostings(formattedData);
     } catch (err) {
@@ -76,31 +77,55 @@ export function useJobReferrals() {
     if (!user) return [];
 
     try {
-      const { data, error } = await supabase
+      // First get the referral requests
+      const { data: requestsData, error: requestsError } = await supabase
         .from('referral_requests')
-        .select(`
-          *,
-          job:job_id(title, company)
-        `)
+        .select('*')
         .eq('requester_id', user.id);
 
-      if (error) {
-        throw error;
+      if (requestsError) {
+        throw requestsError;
       }
 
-      // Format the requests for frontend use
-      return data.map(request => ({
-        id: request.id,
-        job_id: request.job_id,
-        job: request.job,
-        provider_name: null, // We'd need another join to get this
-        reason: request.reason,
-        resume_url: request.resume_url,
-        status: request.status,
-        feedback: request.feedback,
-        requested_at: format(new Date(request.requested_at), 'yyyy-MM-dd'),
-        updated_at: request.updated_at
+      // Then for each request, get the job details
+      const requests = await Promise.all(requestsData.map(async (request) => {
+        if (!request.job_id) {
+          return {
+            ...request,
+            job: {
+              title: 'Unknown Job',
+              company: 'Unknown Company'
+            },
+            requested_at: format(new Date(request.requested_at), 'yyyy-MM-dd')
+          };
+        }
+
+        const { data: jobData, error: jobError } = await supabase
+          .from('job_referral_postings')
+          .select('title, company')
+          .eq('id', request.job_id)
+          .single();
+
+        if (jobError) {
+          console.error('Error fetching job details:', jobError);
+          return {
+            ...request,
+            job: {
+              title: 'Job Not Found',
+              company: 'Unknown'
+            },
+            requested_at: format(new Date(request.requested_at), 'yyyy-MM-dd')
+          };
+        }
+
+        return {
+          ...request,
+          job: jobData,
+          requested_at: format(new Date(request.requested_at), 'yyyy-MM-dd')
+        };
       }));
+
+      return requests as ReferralRequest[];
     } catch (err) {
       console.error('Error fetching referral requests:', err);
       throw err;
@@ -157,7 +182,7 @@ export function useJobReferrals() {
       console.error('Error submitting referral request:', err);
       toast({
         title: "Request Failed",
-        description: err.message || "Failed to submit referral request.",
+        description: (err as Error).message || "Failed to submit referral request.",
         variant: "destructive"
       });
       return null;
