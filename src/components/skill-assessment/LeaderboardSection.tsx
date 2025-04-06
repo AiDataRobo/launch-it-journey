@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Medal, Medal2, ThumbsUp, Users, TrendingUp } from 'lucide-react';
+import { Medal, Users, ThumbsUp, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
   Table,
@@ -69,9 +69,9 @@ const LeaderboardSection = () => {
                       {index === 0 ? (
                         <Medal className="w-6 h-6 text-yellow-500 inline" />
                       ) : index === 1 ? (
-                        <Medal2 className="w-6 h-6 text-gray-400 inline" />
+                        <Medal className="w-6 h-6 text-gray-400 inline" />
                       ) : index === 2 ? (
-                        <Medal2 className="w-6 h-6 text-amber-700 inline" />
+                        <Medal className="w-6 h-6 text-amber-700 inline" />
                       ) : (
                         <span className="text-gray-500">{index + 1}</span>
                       )}
