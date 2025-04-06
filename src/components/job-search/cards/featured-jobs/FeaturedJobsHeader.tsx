@@ -8,12 +8,20 @@ export const FeaturedJobsHeader: React.FC = () => {
       <h2 className="text-2xl font-bold flex items-center">
         <span className="text-jobonboard-purple">✨</span> Featured Opportunities
       </h2>
-      <Link 
-        to="/skill-assessment" 
-        className="text-sm text-jobonboard-purple hover:text-jobonboard-purple-light hover:underline"
-      >
-        Boost your chances - Take a Skill Assessment
-      </Link>
+      <div className="flex gap-4">
+        <Link 
+          to="/skill-assessment" 
+          className="text-sm text-jobonboard-purple hover:text-jobonboard-purple-light hover:underline"
+        >
+          Boost your chances - Take a Skill Assessment
+        </Link>
+        <Link 
+          to="/job-referral" 
+          className="text-sm text-jobonboard-purple hover:text-jobonboard-purple-light hover:underline"
+        >
+          Request Job Referrals
+        </Link>
+      </div>
     </div>
   );
 };
