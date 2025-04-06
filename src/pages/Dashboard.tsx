@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
@@ -12,12 +12,13 @@ import PremiumServices from '@/components/dashboard/PremiumServices';
 import CommunitySection from '@/components/dashboard/CommunitySection';
 import DashboardCustomization from '@/components/dashboard/DashboardCustomization';
 import NotificationPanel from '@/components/dashboard/NotificationPanel';
+import { useDashboardData } from '@/hooks/use-dashboard-data';
+import { toast } from '@/hooks/use-toast';
 
 const Dashboard = () => {
-  const { user, loading, getProfile } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [profile, setProfile] = useState<any>(null);
-  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const { stats, isLoading: isLoadingDashboard, error } = useDashboardData();
 
   useEffect(() => {
     // Redirect if not logged in
@@ -27,26 +28,17 @@ const Dashboard = () => {
   }, [user, loading, navigate]);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      if (user) {
-        setIsLoadingProfile(true);
-        try {
-          const { data, error } = await getProfile();
-          if (!error && data) {
-            setProfile(data);
-          }
-        } catch (error) {
-          console.error('Error fetching profile:', error);
-        } finally {
-          setIsLoadingProfile(false);
-        }
-      }
-    };
+    // Show error toast if there was an error fetching dashboard data
+    if (error) {
+      toast({
+        title: "Error loading dashboard",
+        description: "Failed to load some dashboard data. Please try again.",
+        variant: "destructive"
+      });
+    }
+  }, [error]);
 
-    fetchProfile();
-  }, [user, getProfile]);
-
-  if (loading || isLoadingProfile) {
+  if (loading || isLoadingDashboard) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-pulse-slow text-jobonboard-purple font-semibold text-xl">
@@ -61,17 +53,29 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="container mx-auto px-2 md:px-4">
-        <WelcomeSection userName={profile?.full_name || user.email?.split('@')[0] || 'there'} />
+        <WelcomeSection userName={user.user_metadata?.full_name || user.email?.split('@')[0] || 'there'} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mt-6">
           <div className="lg:col-span-2 space-y-4 lg:space-y-6">
-            <ProfileProgress profile={profile} />
-            <QuickAccessTiles />
+            <ProfileProgress 
+              profile={{ 
+                full_name: user.user_metadata?.full_name,
+                completeness: stats.profileCompleteness
+              }} 
+            />
+            <QuickAccessTiles 
+              stats={{
+                applications: stats.applicationCount,
+                referrals: stats.referralCount,
+                interviews: stats.interviewsScheduled,
+                pendingReferrals: stats.pendingReferrals
+              }}
+            />
             <JobRecommendations />
           </div>
           
           <div className="space-y-4 lg:space-y-6">
-            <NotificationPanel />
+            <NotificationPanel notifications={stats.recentActivity.slice(0, 3)} />
             <CareerGrowthHub />
             <PremiumServices />
             <CommunitySection />
