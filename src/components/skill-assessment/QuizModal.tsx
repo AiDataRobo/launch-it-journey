@@ -28,24 +28,33 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isQuizFinished, setIsQuizFinished] = useState(false);
   const [quizStartTime, setQuizStartTime] = useState<Date | null>(null);
+  const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
   
   // Find the current quiz based on categoryId
   const currentQuiz = categoryId ? quizzes.find(quiz => quiz.categoryId === categoryId) : null;
   
-  // Reset state when the quiz modal is opened with a new category
+  // Reset state and select random questions when the quiz modal is opened with a new category
   useEffect(() => {
-    if (isOpen && categoryId) {
+    if (isOpen && categoryId && currentQuiz) {
       setCurrentQuestionIndex(0);
       setSelectedAnswers({});
       setIsQuizFinished(false);
       setQuizStartTime(new Date());
       
+      // Get random questions for this quiz
+      const randomQuestions = getRandomQuestions(currentQuiz.questions, 15);
+      setQuizQuestions(randomQuestions);
+      
       // Set initial time remaining
-      if (currentQuiz) {
-        setTimeRemaining(currentQuiz.timeLimit * 60); // Convert minutes to seconds
-      }
+      setTimeRemaining(currentQuiz.timeLimit * 60); // Convert minutes to seconds
     }
-  }, [isOpen, categoryId]);
+  }, [isOpen, categoryId, currentQuiz]);
+  
+  // Function to get random questions
+  const getRandomQuestions = (allQuestions: any[], count: number) => {
+    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, Math.min(count, allQuestions.length));
+  };
   
   // Timer effect
   useEffect(() => {
@@ -86,7 +95,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
   
   // Handle next question
   const handleNextQuestion = () => {
-    if (!currentQuiz) return;
+    if (!quizQuestions.length) return;
     
     if (!selectedAnswers[currentQuestionIndex]) {
       toast({
@@ -97,7 +106,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
       return;
     }
     
-    if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+    if (currentQuestionIndex < quizQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       handleFinishQuiz();
@@ -129,19 +138,19 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
   
   // Calculate progress percentage
   const calculateProgress = () => {
-    if (!currentQuiz) return 0;
-    return ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+    if (!quizQuestions.length) return 0;
+    return ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
   };
   
   // Calculate score
   const calculateScore = () => {
-    if (!currentQuiz) return { score: 0, totalQuestions: 0, percentageScore: 0 };
+    if (!quizQuestions.length) return { score: 0, totalQuestions: 0, percentageScore: 0 };
     
-    const correctAnswers = currentQuiz.questions.filter((question, index) => 
+    const correctAnswers = quizQuestions.filter((question, index) => 
       selectedAnswers[index] === question.correctAnswer
     ).length;
     
-    const totalQuestions = currentQuiz.questions.length;
+    const totalQuestions = quizQuestions.length;
     const percentageScore = Math.round((correctAnswers / totalQuestions) * 100);
     
     return {
@@ -151,7 +160,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
     };
   };
   
-  if (!currentQuiz) return null;
+  if (!currentQuiz || !quizQuestions.length) return null;
   
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -162,7 +171,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
               <DialogTitle className="text-xl">{currentQuiz.title}</DialogTitle>
               <DialogDescription>
                 <div className="flex justify-between items-center mt-2">
-                  <span>Question {currentQuestionIndex + 1} of {currentQuiz.questions.length}</span>
+                  <span>Question {currentQuestionIndex + 1} of {quizQuestions.length}</span>
                   <div className="flex items-center text-orange-500">
                     <Clock className="w-4 h-4 mr-1" />
                     <span>{formatTimeRemaining()}</span>
@@ -175,11 +184,11 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
             <div className="py-4">
               <div className="bg-gray-50 p-4 rounded-lg mb-6">
                 <h3 className="text-lg font-medium mb-2">
-                  {currentQuiz.questions[currentQuestionIndex].question}
+                  {quizQuestions[currentQuestionIndex].question}
                 </h3>
-                {currentQuiz.questions[currentQuestionIndex].code && (
+                {quizQuestions[currentQuestionIndex].code && (
                   <pre className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto text-sm mb-4">
-                    <code>{currentQuiz.questions[currentQuestionIndex].code}</code>
+                    <code>{quizQuestions[currentQuestionIndex].code}</code>
                   </pre>
                 )}
                 
@@ -187,7 +196,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
                   value={selectedAnswers[currentQuestionIndex]}
                   onValueChange={(value) => handleSelectAnswer(currentQuestionIndex, value)}
                 >
-                  {currentQuiz.questions[currentQuestionIndex].answers.map((answer) => (
+                  {quizQuestions[currentQuestionIndex].answers.map((answer) => (
                     <div key={answer.id} className="flex items-center space-x-2 p-3 rounded-lg hover:bg-gray-100">
                       <RadioGroupItem value={answer.id} id={answer.id} />
                       <Label htmlFor={answer.id} className="flex-grow cursor-pointer">{answer.text}</Label>
@@ -196,12 +205,12 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
                 </RadioGroup>
               </div>
               
-              {currentQuiz.questions[currentQuestionIndex].hint && (
+              {quizQuestions[currentQuestionIndex].hint && (
                 <div className="flex items-start p-3 bg-blue-50 text-blue-800 rounded-lg mb-6">
                   <AlertCircle className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="font-medium">Hint:</p>
-                    <p className="text-sm">{currentQuiz.questions[currentQuestionIndex].hint}</p>
+                    <p className="text-sm">{quizQuestions[currentQuestionIndex].hint}</p>
                   </div>
                 </div>
               )}
@@ -219,14 +228,14 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
                   onClick={handleNextQuestion}
                   className="bg-jobonboard-purple hover:bg-jobonboard-purple-light"
                 >
-                  {currentQuestionIndex === currentQuiz.questions.length - 1 ? 'Finish' : 'Next'}
+                  {currentQuestionIndex === quizQuestions.length - 1 ? 'Finish' : 'Next'}
                 </Button>
               </div>
             </div>
           </>
         ) : (
           <QuizResults 
-            quiz={currentQuiz}
+            quiz={{...currentQuiz, questions: quizQuestions}}
             results={calculateScore()}
             selectedAnswers={selectedAnswers}
             timeTaken={quizStartTime ? Math.floor((new Date().getTime() - quizStartTime.getTime()) / 1000) : 0}
@@ -237,6 +246,8 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, categoryId }) =>
               setIsQuizFinished(false);
               setQuizStartTime(new Date());
               setTimeRemaining(currentQuiz.timeLimit * 60);
+              // Get a new set of random questions for the retake
+              setQuizQuestions(getRandomQuestions(currentQuiz.questions, 15));
             }}
           />
         )}
