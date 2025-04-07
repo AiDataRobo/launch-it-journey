@@ -3,10 +3,17 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { JobRecommendation } from '@/hooks/use-dashboard-data';
 
-const JobRecommendations = () => {
-  const jobs = [
+interface JobRecommendationsProps {
+  jobs?: JobRecommendation[];
+}
+
+const JobRecommendations: React.FC<JobRecommendationsProps> = ({ jobs = [] }) => {
+  // Show default jobs if no jobs are provided
+  const displayJobs = jobs.length > 0 ? jobs : [
     {
+      id: "1",
       title: "Senior Frontend Developer",
       company: "Tech Innovators Inc.",
       location: "San Francisco, CA (Remote)",
@@ -16,6 +23,7 @@ const JobRecommendations = () => {
       tags: ["React", "TypeScript", "UI/UX"],
     },
     {
+      id: "2",
       title: "Full Stack Engineer",
       company: "FutureSoft Solutions",
       location: "New York, NY (Hybrid)",
@@ -25,6 +33,7 @@ const JobRecommendations = () => {
       tags: ["JavaScript", "Node.js", "MongoDB"],
     },
     {
+      id: "3",
       title: "Product Manager",
       company: "Growth Ventures",
       location: "Austin, TX (On-site)",
@@ -47,8 +56,8 @@ const JobRecommendations = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {jobs.map((job, index) => (
-            <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-all">
+          {displayJobs.map((job) => (
+            <div key={job.id} className="border rounded-lg p-4 hover:shadow-md transition-all">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-medium">{job.title}</h3>

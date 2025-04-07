@@ -71,14 +71,14 @@ const Dashboard = () => {
                 pendingReferrals: stats.pendingReferrals
               }}
             />
-            <JobRecommendations />
+            <JobRecommendations jobs={stats.recommendedJobs} />
           </div>
           
           <div className="space-y-4 lg:space-y-6">
             <NotificationPanel notifications={stats.recentActivity.slice(0, 3)} />
-            <CareerGrowthHub />
-            <PremiumServices />
-            <CommunitySection />
+            <CareerGrowthHub events={stats.upcomingEvents} courses={stats.popularCourses} />
+            <PremiumServices services={stats.premiumServices} />
+            <CommunitySection discussions={stats.communityDiscussions} />
           </div>
         </div>
         

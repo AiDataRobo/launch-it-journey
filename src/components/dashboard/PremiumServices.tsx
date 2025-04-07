@@ -2,22 +2,31 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { PremiumService } from '@/hooks/use-dashboard-data';
 
-const PremiumServices = () => {
-  const services = [
+interface PremiumServicesProps {
+  services?: PremiumService[];
+}
+
+const PremiumServices: React.FC<PremiumServicesProps> = ({ services = [] }) => {
+  // Use default services if none are provided
+  const displayServices = services.length > 0 ? services : [
     {
+      id: "1",
       title: "1-on-1 Career Coaching",
       description: "Personal guidance from industry experts",
       price: "$99",
       highlight: "Most Popular"
     },
     {
+      id: "2",
       title: "Job Search Assistant",
       description: "Dedicated expert for your job search",
       price: "$149",
       highlight: null
     },
     {
+      id: "3",
       title: "Interview Guarantee",
       description: "Get an interview or your money back",
       price: "$199",
@@ -32,8 +41,8 @@ const PremiumServices = () => {
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-3">
-          {services.map((service, index) => (
-            <div key={index} className="border rounded-lg p-3 hover:shadow-md transition-all cursor-pointer relative overflow-hidden">
+          {displayServices.map((service) => (
+            <div key={service.id} className="border rounded-lg p-3 hover:shadow-md transition-all cursor-pointer relative overflow-hidden">
               {service.highlight && (
                 <div className="absolute top-0 right-0">
                   <Badge className="bg-jobonboard-purple text-white text-xs rounded-tl-none rounded-br-none">
